@@ -10,7 +10,7 @@ export const siteConfig = {
     phone: '+977 980-4420167',
     whatsapp: '+977 980-4420167',
     email: 'info@rebhairahawa.com',
-    mapsUrl: 'https://www.google.com/maps',
+    mapsUrl: 'https://maps.app.goo.gl/jTWtdBM1oDNcTSwm8',
   },
   links: {
     instagram: '#',
