@@ -151,7 +151,7 @@ export function TestRideForm({
                 </span>
                 <span className="text-zinc-600 text-xs">•</span>
                 <span className="text-[10px] font-heading font-semibold tracking-wider text-zinc-400 uppercase">
-                  Bhairahawa Showroom
+                  Bhairahawa
                 </span>
               </div>
               <h3 className="font-heading text-base sm:text-lg font-bold uppercase text-white tracking-wide">
@@ -161,7 +161,7 @@ export function TestRideForm({
           </div>
 
           <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="inline-block w-2 h-2 bg-emerald-500 animate-pulse" />
             <span className="font-heading uppercase tracking-wider text-[11px] text-zinc-300">
               Test Ride Slots Open
             </span>
@@ -176,7 +176,7 @@ export function TestRideForm({
           </div>
           <div className="flex items-center gap-2">
             <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-            <span>Showroom: {siteConfig.location.phone}</span>
+            <span>{siteConfig.location.phone}</span>
           </div>
         </div>
 
@@ -253,7 +253,7 @@ export function TestRideForm({
                           </p>
                         </div>
                         {isSelected && (
-                          <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" />
+                          <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent" />
                         )}
                       </button>
                     );
@@ -351,7 +351,7 @@ export function TestRideForm({
           {/* Date Picker (Date Only - NO Time field!) */}
           <div>
             <label htmlFor="preferredDate" className="block text-xs font-heading uppercase tracking-wider text-white font-semibold mb-1.5">
-              Preferred Date * (Showroom Working Hours: 10:00 AM – 6:30 PM)
+              Preferred Date * (Working Hours: 10:00 AM – 6:30 PM)
             </label>
             <div className="relative">
               <Input

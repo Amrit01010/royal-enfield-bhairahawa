@@ -9,6 +9,7 @@ import { navItems } from '@/lib/constants/motorcycles';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { useCart } from '@/hooks/use-cart';
+import Image from 'next/image';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,10 +44,14 @@ export function Navbar() {
               <div className="w-1.5 h-8 bg-accent group-hover:scale-y-110 transition-transform" />
               <div className="flex flex-col leading-none">
                 <span className="font-heading text-xl sm:text-2xl font-bold tracking-wider text-white group-hover:text-accent transition-colors">
-                  ROYAL ENFIELD
+                  <Image
+                    src="/logo.svg"
+                    width="100"
+                    height="100"
+                  />
                 </span>
-                <span className="font-heading text-[10px] tracking-[0.35em] text-accent uppercase font-medium">
-                  Bhairahawa Showroom
+                <span className="mt-1.5 font-heading text-[10px] tracking-[0.35em] text-accent uppercase font-medium duration-200 transition-all hover:scale-115">
+                  Bhairahawa
                 </span>
               </div>
             </div>

@@ -11,7 +11,7 @@ import { OptimizedImage } from '@/components/shared/optimized-image';
 
 export function MotorcycleLineup() {
   const series350 = motorcycles.filter((m) => m.category === '350cc');
-  const series400 = motorcycles.filter((m) => m.category === '400cc+');
+  // const series400 = motorcycles.filter((m) => m.category === '400cc+');
 
   return (
     <section className="relative py-20 lg:py-28 bg-[#0D0D0D]">
@@ -42,6 +42,7 @@ export function MotorcycleLineup() {
         </div>
 
         {/* 400cc+ Series */}
+        {/*
         <div>
           <div className="flex items-center gap-3 mb-6 pb-3 border-b border-border">
             <div className="w-2 h-4 bg-accent" />
@@ -59,6 +60,7 @@ export function MotorcycleLineup() {
             ))}
           </div>
         </div>
+          */}
       </div>
     </section>
   );
