@@ -78,29 +78,44 @@ export function buildAccessoryWhatsAppMessage(
     .join('\n');
 }
 
+export interface TestRideWhatsAppParams {
+  branchName?: string;
+  motorcycleName?: string;
+  firstName?: string;
+  lastName?: string;
+  riderName?: string;
+  phone?: string;
+  email?: string;
+  preferredDate?: string;
+  preferredTime?: string;
+  notes?: string;
+  termsAccepted?: boolean;
+}
+
 /**
  * Message template for booking a test ride.
  */
-export function buildTestRideWhatsAppMessage(params: {
-  motorcycleName?: string;
-  preferredDate?: string;
-  preferredTime?: string;
-  riderName?: string;
-  phone?: string;
-  notes?: string;
-}): string {
+export function buildTestRideWhatsAppMessage(params: TestRideWhatsAppParams): string {
+  const riderFullName =
+    params.riderName ||
+    [params.firstName, params.lastName].filter(Boolean).join(' ') ||
+    'Rider';
+
   return [
     `Namaste Royal Enfield Bhairahawa!`,
     ``,
-    `I would like to book a Royal Enfield test ride:`,
-    params.motorcycleName ? `• Motorcycle: ${params.motorcycleName}` : null,
+    `I would like to book an official Royal Enfield test ride:`,
+    params.motorcycleName ? `• Motorcycle Model: ${params.motorcycleName}` : null,
     params.preferredDate ? `• Preferred Date: ${params.preferredDate}` : null,
     params.preferredTime ? `• Preferred Time: ${params.preferredTime}` : null,
-    params.riderName ? `• Rider Name: ${params.riderName}` : null,
-    params.phone ? `• Contact Phone: ${params.phone}` : null,
-    params.notes ? `• Notes: ${params.notes}` : null,
+    `• Rider Name: ${riderFullName}`,
+    params.phone ? `• Mobile Number: ${params.phone}` : null,
+    params.email ? `• Email: ${params.email}` : null,
+    `• Showroom: Royal Enfield Bhairahawa (${siteConfig.location.address})`,
+    `• Terms & Conditions: Accepted (Valid Driving License & Safety Gear confirmed)`,
+    params.notes ? `• Additional Notes: ${params.notes}` : null,
     ``,
-    `Please confirm my test ride appointment at your showroom located at ${siteConfig.location.address}.`,
+    `Please confirm the motorcycle availability and test ride slot at your Bhairahawa showroom. Thank you!`,
   ]
     .filter(Boolean)
     .join('\n');

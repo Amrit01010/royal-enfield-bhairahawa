@@ -56,24 +56,29 @@ export async function bookTestRide(
   formData: FormData
 ): Promise<BookTestRideState> {
   const motorcycleId = readString(formData, 'motorcycleId');
-  const name = readString(formData, 'name');
+  const firstName = readString(formData, 'firstName') || readString(formData, 'fName');
+  const lastName = readString(formData, 'lastName') || readString(formData, 'lName');
+  const name =
+    readString(formData, 'name') ||
+    [firstName, lastName].filter(Boolean).join(' ');
   const email = readString(formData, 'email');
-  const phone = readString(formData, 'phone');
+  const phone = readString(formData, 'phone') || readString(formData, 'mobile');
   const preferredDate = readString(formData, 'preferredDate');
-  const preferredTime = readString(formData, 'preferredTime');
-  const notes = readString(formData, 'notes');
+  const preferredTime = readString(formData, 'preferredTime') || null;
+  const rawNotes = readString(formData, 'notes');
+  const chkAgree = formData.get('chkAgree') || formData.get('termsAccepted');
 
   if (!motorcycleId || !motorcycles.some((moto) => moto.id === motorcycleId)) {
-    return { success: false, error: 'Please select a motorcycle.', field: 'motorcycleId' };
+    return { success: false, error: 'Please select a motorcycle model.', field: 'motorcycleId' };
   }
   if (!name) {
-    return { success: false, error: 'Please enter your name.', field: 'name' };
+    return { success: false, error: 'Please enter your first and last name.', field: firstName ? 'lastName' : 'firstName' };
   }
   if (!email || !EMAIL_PATTERN.test(email)) {
     return { success: false, error: 'Please enter a valid email address.', field: 'email' };
   }
   if (!phone || phone.replace(/\D/g, '').length < 7) {
-    return { success: false, error: 'Please enter a valid phone number.', field: 'phone' };
+    return { success: false, error: 'Please enter a valid mobile number.', field: 'phone' };
   }
   if (!preferredDate || !isValidDate(preferredDate)) {
     return { success: false, error: 'Please choose a preferred date.', field: 'preferredDate' };
@@ -81,9 +86,16 @@ export async function bookTestRide(
   if (isPastDate(preferredDate)) {
     return { success: false, error: 'Preferred date cannot be in the past.', field: 'preferredDate' };
   }
-  if (!preferredTime) {
-    return { success: false, error: 'Please choose a preferred time.', field: 'preferredTime' };
+  if (chkAgree === null && formData.has('chkAgree')) {
+    return { success: false, error: 'Please accept the terms and conditions.', field: 'chkAgree' };
   }
+
+  const compiledNotes = [
+    `Showroom: Royal Enfield Bhairahawa`,
+    rawNotes ? `Notes: ${rawNotes}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   const supabase = await createClient();
   const {
@@ -105,7 +117,7 @@ export async function bookTestRide(
     rider_name: name,
     rider_email: email,
     rider_phone: phone,
-    notes: notes || null,
+    notes: compiledNotes || null,
     status: 'pending',
   };
 
@@ -120,8 +132,8 @@ export async function bookTestRide(
         name,
         email,
         phone,
-        time: preferredTime,
-        notes,
+        time: preferredTime || 'Showroom Hours',
+        notes: rawNotes,
       }),
       status: 'pending',
     });
