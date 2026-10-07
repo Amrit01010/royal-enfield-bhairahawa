@@ -18,13 +18,33 @@ export interface Motorcycle {
   isNew?: boolean;
 }
 
+export type RideCategory =
+  | 'Marquee'
+  | 'Himalayan Adventure'
+  | 'Discovery'
+  | 'Community & Festival'
+  | 'Training';
+
+export type RideDifficulty = 'Easy' | 'Moderate' | 'Challenging' | 'Extreme';
+
 export interface Ride {
   id: string;
   name: string;
+  tagline?: string;
+  category: RideCategory;
   description: string;
-  image?: string;
-  duration?: string;
-  difficulty?: 'Easy' | 'Moderate' | 'Challenging' | 'Extreme';
+  fullDescription?: string;
+  image: string;
+  duration: string;
+  distance?: string;
+  difficulty: RideDifficulty;
+  elevation?: string;
+  route?: string;
+  season?: string;
+  terrain?: string;
+  highlights?: string[];
+  inclusions?: string[];
+  motorcycleSuitability?: string;
   href: string;
 }
 

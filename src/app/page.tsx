@@ -1,7 +1,7 @@
 // src/app/page.tsx
 import { HeroSection } from '@/components/sections/hero-section';
 import { MotorcycleLineup } from '@/components/sections/motorcycle-lineup';
-// import { RidesSection } from '@/components/sections/rides-section'; // using this in future
+import { RidesSection } from '@/components/sections/rides-section';
 import { CTASection } from '@/components/sections/cta-section';
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
     <>
       <HeroSection />
       <MotorcycleLineup />
-      {/* <RidesSection /> */}
+      <RidesSection />
       <CTASection />
     </>
   );

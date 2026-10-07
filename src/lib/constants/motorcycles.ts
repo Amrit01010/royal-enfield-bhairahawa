@@ -1,5 +1,4 @@
-// src/lib/constants/motorcycles.ts
-import { Motorcycle, Ride, HeroSlide, NavItem } from '@/lib/types';
+import { Motorcycle, HeroSlide, NavItem } from '@/lib/types';
 
 export const heroSlides: HeroSlide[] = [
   {
@@ -257,44 +256,7 @@ export function getMotorcycle(id: string) {
   return motorcycles.find((motorcycle) => motorcycle.id === id);
 }
 
-export const rides: Ride[] = [
-  {
-    id: 'himalayan-odyssey',
-    name: 'Himalayan Odyssey',
-    description: "Ride across the world's highest mountain roads.",
-    duration: '12 Days',
-    difficulty: 'Extreme',
-    href: '/rides/himalayan-odyssey',
-    image: '/Royal Enfield/banners/himalayan-odyssey-1920x750.jpg',
-  },
-  {
-    id: 'moto-himalaya',
-    name: 'Moto Himalaya',
-    description: 'Experience Nepal & Himalayas like never before.',
-    duration: '8 Days',
-    difficulty: 'Challenging',
-    href: '/rides/moto-himalaya',
-    image: '/Royal Enfield/banners/moto-himalaya.jpg',
-  },
-  {
-    id: 'leh-ladakh',
-    name: 'Leh Ladakh',
-    description: 'The ultimate Royal Enfield adventure.',
-    duration: '10 Days',
-    difficulty: 'Extreme',
-    href: '/rides/leh-ladakh',
-    image: '/Royal Enfield/banners/leh-ladakh.jpg',
-  },
-  {
-    id: 'weekend-escape',
-    name: 'Weekend Escape',
-    description: 'Explore hidden roads with fellow riders.',
-    duration: '2 Days',
-    difficulty: 'Easy',
-    href: '/rides/weekend-escape',
-    image: '/Royal Enfield/banners/weekend-escape.jpg',
-  },
-];
+export { rides } from './rides';
 
 export const navItems: NavItem[] = [
   { label: 'Motorcycles', href: '/models' },
@@ -302,11 +264,14 @@ export const navItems: NavItem[] = [
     label: 'Rides',
     href: '/rides',
     children: [
-      { label: 'All Rides', href: '/rides' },
+      { label: 'All Expeditions', href: '/rides' },
       { label: 'Himalayan Odyssey', href: '/rides/himalayan-odyssey' },
       { label: 'Moto Himalaya', href: '/rides/moto-himalaya' },
-      { label: 'Leh Ladakh', href: '/rides/leh-ladakh' },
-      { label: 'Community Rides', href: '/rides/community' },
+      { label: 'Tour of Bhutan', href: '/rides/tour-of-bhutan' },
+      { label: 'Mustang Adventure', href: '/rides/himalayan-adventure-mustang' },
+      { label: 'Tour of North East', href: '/rides/tour-of-north-east' },
+      { label: 'One Ride & Community', href: '/rides/one-ride' },
+      { label: 'Motoverse (Goa)', href: '/rides/motoverse' },
     ],
   },
   { label: 'Accessories', href: '/accessories' },

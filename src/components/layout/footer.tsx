@@ -94,18 +94,23 @@ export function Footer() {
               Expeditions & Rides
             </h4>
             <ul className="space-y-2.5">
-              {['Himalayan Odyssey', 'Moto Himalaya', 'Leh Ladakh', 'Community Rides'].map(
-                (ride) => (
-                  <li key={ride}>
-                    <Link
-                      href="/rides"
-                      className="text-xs font-heading uppercase tracking-wider text-zinc-400 hover:text-white hover:text-accent transition-colors"
-                    >
-                      {ride}
-                    </Link>
-                  </li>
-                )
-              )}
+              {[
+                { name: 'Himalayan Odyssey', href: '/rides/himalayan-odyssey' },
+                { name: 'Moto Himalaya', href: '/rides/moto-himalaya' },
+                { name: 'Tour of Bhutan', href: '/rides/tour-of-bhutan' },
+                { name: 'Mustang Adventure', href: '/rides/himalayan-adventure-mustang' },
+                { name: 'Tour of North East', href: '/rides/tour-of-north-east' },
+                { name: 'One Ride (Global)', href: '/rides/one-ride' },
+              ].map((ride) => (
+                <li key={ride.name}>
+                  <Link
+                    href={ride.href}
+                    className="text-xs font-heading uppercase tracking-wider text-zinc-400 hover:text-white hover:text-accent transition-colors"
+                  >
+                    {ride.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

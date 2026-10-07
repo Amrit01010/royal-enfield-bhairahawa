@@ -37,7 +37,7 @@ export function buildCartWhatsAppMessage(items: CartItem[], subtotal: number): s
   const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   return [
-    `Namaste Royal Enfield Bhairahawa! 🙏`,
+    `Namaste Royal Enfield Bhairahawa!`,
     ``,
     `I would like to order the following accessories & riding gear:`,
     ``,
@@ -61,7 +61,7 @@ export function buildAccessoryWhatsAppMessage(
 ): string {
   const total = accessory.price * quantity;
   return [
-    `Namaste Royal Enfield Bhairahawa! 🙏`,
+    `Namaste Royal Enfield Bhairahawa!`,
     ``,
     `I am interested in purchasing this accessory:`,
     `• Product: ${accessory.name}`,
@@ -90,7 +90,7 @@ export function buildTestRideWhatsAppMessage(params: {
   notes?: string;
 }): string {
   return [
-    `Namaste Royal Enfield Bhairahawa! 🙏`,
+    `Namaste Royal Enfield Bhairahawa!`,
     ``,
     `I would like to book a Royal Enfield test ride:`,
     params.motorcycleName ? `• Motorcycle: ${params.motorcycleName}` : null,
@@ -113,16 +113,22 @@ export function buildRideExpeditionWhatsAppMessage(ride: {
   name: string;
   duration?: string;
   difficulty?: string;
+  route?: string;
+  category?: string;
+  elevation?: string;
 }): string {
   return [
-    `Namaste Royal Enfield Bhairahawa! 🙏`,
+    `Namaste Royal Enfield Bhairahawa!`,
     ``,
-    `I would like to inquire about joining this ride expedition:`,
+    `I would like to inquire about joining this official Royal Enfield expedition / ride:`,
     `• Expedition: ${ride.name}`,
+    ride.category ? `• Category: ${ride.category}` : null,
     ride.duration ? `• Duration: ${ride.duration}` : null,
     ride.difficulty ? `• Difficulty: ${ride.difficulty}` : null,
+    ride.elevation ? `• Max Elevation: ${ride.elevation}` : null,
+    ride.route ? `• Circuit: ${ride.route}` : null,
     ``,
-    `Could you please share details regarding upcoming schedule, participation requirements, and registration?`,
+    `Could you please share details regarding upcoming batches, participation requirements, vehicle preparation, and registration from the Bhairahawa showroom?`,
   ]
     .filter(Boolean)
     .join('\n');
