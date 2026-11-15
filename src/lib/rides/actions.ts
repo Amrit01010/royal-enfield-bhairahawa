@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { motorcycles } from '@/lib/constants/motorcycles';
+import { getMotorcycleColor, motorcycles } from '@/lib/constants/motorcycles';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/types';
 
@@ -56,6 +56,7 @@ export async function bookTestRide(
   formData: FormData
 ): Promise<BookTestRideState> {
   const motorcycleId = readString(formData, 'motorcycleId');
+  const motorcycleColorId = readString(formData, 'motorcycleColor');
   const firstName = readString(formData, 'firstName') || readString(formData, 'fName');
   const lastName = readString(formData, 'lastName') || readString(formData, 'lName');
   const name =
@@ -71,6 +72,7 @@ export async function bookTestRide(
   if (!motorcycleId || !motorcycles.some((moto) => moto.id === motorcycleId)) {
     return { success: false, error: 'Please select a motorcycle model.', field: 'motorcycleId' };
   }
+  const selectedColor = getMotorcycleColor(motorcycleId, motorcycleColorId);
   if (!name) {
     return { success: false, error: 'Please enter your first and last name.', field: firstName ? 'lastName' : 'firstName' };
   }
@@ -92,6 +94,7 @@ export async function bookTestRide(
 
   const compiledNotes = [
     `Showroom: Royal Enfield Bhairahawa`,
+    selectedColor ? `Colour: ${selectedColor.name}` : '',
     rawNotes ? `Notes: ${rawNotes}` : '',
   ]
     .filter(Boolean)
@@ -133,7 +136,9 @@ export async function bookTestRide(
         email,
         phone,
         time: preferredTime || 'Showroom Hours',
-        notes: rawNotes,
+        notes: [selectedColor ? `Colour: ${selectedColor.name}` : '', rawNotes]
+          .filter(Boolean)
+          .join('\n'),
       }),
       status: 'pending',
     });

@@ -1,4 +1,14 @@
 // src/lib/types/index.ts
+export interface MotorcycleColor {
+  /** Stable identifier used by the booking form and stored in notes. */
+  id: string;
+  name: string;
+  /** Swatch colour shown in the colour selector. */
+  hex: string;
+  /** ImageKit path for the colour-specific motorcycle image. */
+  image: string;
+}
+
 export interface Motorcycle {
   id: string;
   name: string;
@@ -16,6 +26,7 @@ export interface Motorcycle {
   };
   href: string;
   isNew?: boolean;
+  colors?: MotorcycleColor[];
 }
 
 export type RideCategory =
@@ -64,6 +75,8 @@ export interface HeroSlide {
   href: string;
   image?: string;
   actionImage?: string;
+  /** Colourway id used for the transparent studio image. */
+  studioColorId?: string;
   specs?: {
     displacement: string;
     power: string;

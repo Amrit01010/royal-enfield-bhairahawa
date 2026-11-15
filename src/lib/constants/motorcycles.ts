@@ -1,4 +1,5 @@
 import { Motorcycle, HeroSlide, NavItem } from '@/lib/types';
+import { motorcycleColors } from './motorcycle-colors';
 
 export const heroSlides: HeroSlide[] = [
   // {
@@ -30,6 +31,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/hunter-350',
     image: '/Royal Enfield/bikes/hunter-350.jpg',
     actionImage: '/Royal Enfield/actions/hunter.jpg',
+    studioColorId: 'mumbai-yellow',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',
@@ -48,6 +50,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/meteor-350',
     image: '/Royal Enfield/bikes/meteor-350.jpg',
     actionImage: '/Royal Enfield/actions/meteor.jpg',
+    studioColorId: 'stellar-marine-blue',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',
@@ -66,6 +69,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/goan-classic-350',
     image: '/Royal Enfield/bikes/goan-classic-350.jpg',
     actionImage: '/Royal Enfield/actions/goan.jpg',
+    studioColorId: 'trip-teal',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',
@@ -84,6 +88,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/classic-350',
     image: '/Royal Enfield/bikes/classic-350.jpg',
     actionImage: '/Royal Enfield/actions/classic-black.jpg',
+    studioColorId: 'madras-red',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',
@@ -140,6 +145,7 @@ export const motorcycles: Motorcycle[] = [
     subcategory: 'Urban Roadster',
     href: '/models/hunter-350',
     image: '/Royal Enfield/bikes/hunter-350.jpg',
+    colors: motorcycleColors['hunter-350'],
     specs: {
       engine: '349cc J-Series Single Cylinder',
       power: '20.2 BHP @ 6100 rpm',
@@ -157,6 +163,7 @@ export const motorcycles: Motorcycle[] = [
     subcategory: 'Highway Cruiser',
     href: '/models/meteor-350',
     image: '/Royal Enfield/bikes/meteor-350.jpg',
+    colors: motorcycleColors['meteor-350'],
     specs: {
       engine: '349cc Air-Oil Cooled SOHC',
       power: '20.2 BHP @ 6100 rpm',
@@ -174,6 +181,7 @@ export const motorcycles: Motorcycle[] = [
     subcategory: 'Bobber Cruiser',
     href: '/models/goan-classic-350',
     image: '/Royal Enfield/bikes/goan-classic-350.jpg',
+    colors: motorcycleColors['goan-classic-350'],
     specs: {
       engine: '349cc J-Series Single Cylinder',
       power: '20.2 BHP @ 6100 rpm',
@@ -191,6 +199,7 @@ export const motorcycles: Motorcycle[] = [
     subcategory: 'Retro Motorcycle',
     href: '/models/classic-350',
     image: '/Royal Enfield/bikes/classic-350.jpg',
+    colors: motorcycleColors['classic-350'],
     specs: {
       engine: '349cc Air-Oil Cooled Single',
       power: '20.2 BHP @ 6100 rpm',
@@ -254,6 +263,25 @@ export const motorcycles: Motorcycle[] = [
 
 export function getMotorcycle(id: string) {
   return motorcycles.find((motorcycle) => motorcycle.id === id);
+}
+
+export function getMotorcycleColor(motorcycleId: string, colorId: string) {
+  return getMotorcycle(motorcycleId)?.colors?.find((color) => color.id === colorId);
+}
+
+/**
+ * Resolves the transparent studio colourway used for showcase imagery.
+ * Hero slides pin a signature colour; other surfaces fall back to the first
+ * official colourway for the model.
+ */
+export function getMotorcycleStudioColor(motorcycleId: string) {
+  const motorcycle = getMotorcycle(motorcycleId);
+  if (!motorcycle?.colors?.length) return undefined;
+
+  const studioColorId = heroSlides.find((slide) => slide.id === motorcycleId)?.studioColorId;
+  return (
+    motorcycle.colors.find((color) => color.id === studioColorId) ?? motorcycle.colors[0]
+  );
 }
 
 export { rides } from './rides';

@@ -81,6 +81,7 @@ export function buildAccessoryWhatsAppMessage(
 export interface TestRideWhatsAppParams {
   branchName?: string;
   motorcycleName?: string;
+  motorcycleColor?: string;
   firstName?: string;
   lastName?: string;
   riderName?: string;
@@ -106,6 +107,7 @@ export function buildTestRideWhatsAppMessage(params: TestRideWhatsAppParams): st
     ``,
     `I would like to book an official Royal Enfield test ride:`,
     params.motorcycleName ? `• Motorcycle Model: ${params.motorcycleName}` : null,
+    params.motorcycleColor ? `• Colour: ${params.motorcycleColor}` : null,
     params.preferredDate ? `• Preferred Date: ${params.preferredDate}` : null,
     params.preferredTime ? `• Preferred Time: ${params.preferredTime}` : null,
     `• Rider Name: ${riderFullName}`,

@@ -48,6 +48,7 @@ export function Navbar() {
                     src="/logo.svg"
                     width="100"
                     height="100"
+                    alt="logo"
                   />
                 </span>
                 <span className="mt-1.5 font-heading text-[10px] tracking-[0.35em] text-accent uppercase font-medium duration-200 transition-all hover:scale-115">

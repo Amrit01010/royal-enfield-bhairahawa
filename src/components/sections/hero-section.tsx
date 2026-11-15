@@ -14,7 +14,7 @@ import {
   Compass,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { heroSlides } from '@/lib/constants/motorcycles';
+import { heroSlides, getMotorcycleStudioColor } from '@/lib/constants/motorcycles';
 import { Button } from '@/components/ui/button';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 
@@ -89,8 +89,10 @@ export function HeroSection() {
   }, [nextSlide, prevSlide]);
 
   const slide = heroSlides[currentSlide] || heroSlides[0];
+  const studioColor = getMotorcycleStudioColor(slide.id);
+  const studioImage = studioColor?.image ?? slide.image;
   const activeImage =
-    viewMode === 'action' && slide.actionImage ? slide.actionImage : slide.image;
+    viewMode === 'action' && slide.actionImage ? slide.actionImage : studioImage;
 
   return (
     <section
@@ -359,8 +361,24 @@ export function HeroSection() {
               {/* Radial Spotlight directly behind the motorcycle */}
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(216,35,42,0.18)_0%,rgba(14,14,14,0)_70%)] pointer-events-none z-1" />
 
-              {/* Showroom Floor Shadow Gradient */}
-              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none z-2" />
+              {/* Colourway glow echoing the studio platform rim */}
+              {viewMode === 'studio' && studioColor && (
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-2/3 opacity-25 blur-3xl pointer-events-none z-1 transition-opacity duration-700"
+                  style={{
+                    background: `radial-gradient(ellipse at 50% 78%, ${studioColor.hex}, transparent 60%)`,
+                  }}
+                />
+              )}
+
+              {/* Showroom Floor Shadow Gradient (action view only — studio shots include their own platform) */}
+              <div
+                className={cn(
+                  'absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none z-2 transition-opacity duration-500',
+                  viewMode === 'studio' && 'opacity-0'
+                )}
+              />
 
               {/* The Motorcycle Image Presentation */}
               <div
@@ -370,17 +388,24 @@ export function HeroSection() {
                 {activeImage ? (
                   <OptimizedImage
                     src={activeImage}
-                    alt={slide.title}
+                    alt={
+                      viewMode === 'action'
+                        ? slide.title
+                        : `${slide.title} in ${studioColor?.name ?? 'official colourway'}`
+                    }
                     fill
                     priority
+                    sizes="(max-width: 1024px) 100vw, 58vw"
                     transformation={{
                       width: 1400,
                       quality: 88,
                       format: 'auto',
                     }}
                     className={cn(
-                      'object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]',
-                      viewMode === 'studio' && 'object-contain sm:object-cover'
+                      'transition-transform duration-700 ease-out',
+                      viewMode === 'studio'
+                        ? 'object-contain p-2 sm:p-4 group-hover:scale-[1.02]'
+                        : 'object-cover object-center group-hover:scale-[1.03]'
                     )}
                     fallbackText={slide.title}
                   />

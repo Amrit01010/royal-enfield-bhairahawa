@@ -22,6 +22,7 @@ import { siteConfig } from '@/config/site';
 import { buildTestRideWhatsAppMessage, buildWhatsAppUrl } from '@/lib/whatsapp';
 import { bookTestRide } from '@/lib/rides/actions';
 import { TestRideTermsModal } from '@/components/rides/test-ride-terms-modal';
+import { MotorcycleColorPicker } from '@/components/rides/motorcycle-color-picker';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 import { cn } from '@/lib/utils';
 
@@ -50,7 +51,21 @@ export function TestRideForm({
   // Model Selection
   const initialMoto = motorcycles.find((m) => m.id === motorcycleId) || motorcycles[0];
   const [selectedMotoId, setSelectedMotoId] = useState<string>(initialMoto?.id || '');
+  const [selectedColorId, setSelectedColorId] = useState<string>(
+    initialMoto?.colors?.[0]?.id || ''
+  );
   const activeMotorcycle = motorcycles.find((m) => m.id === selectedMotoId) || initialMoto;
+  const activeColor =
+    activeMotorcycle?.colors?.find((color) => color.id === selectedColorId) ??
+    activeMotorcycle?.colors?.[0];
+
+  const handleSelectMotorcycle = (id: string) => {
+    if (id === selectedMotoId) return;
+
+    const nextMotorcycle = motorcycles.find((moto) => moto.id === id);
+    setSelectedMotoId(id);
+    setSelectedColorId(nextMotorcycle?.colors?.[0]?.id || '');
+  };
 
   // Form Fields State
   const [firstName, setFirstName] = useState('');
@@ -97,10 +112,14 @@ export function TestRideForm({
     if (!form.reportValidity()) return;
 
     const chosenMoto = motorcycles.find((m) => m.id === selectedMotoId) || activeMotorcycle;
+    const chosenColor =
+      chosenMoto?.colors?.find((color) => color.id === selectedColorId) ??
+      chosenMoto?.colors?.[0];
 
     // Build formatted WhatsApp message for Royal Enfield Bhairahawa
     const message = buildTestRideWhatsAppMessage({
       motorcycleName: chosenMoto ? `${chosenMoto.name} (${chosenMoto.tagline})` : undefined,
+      motorcycleColor: chosenColor?.name,
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       email: email.trim(),
@@ -116,6 +135,7 @@ export function TestRideForm({
     if (user) {
       const formData = new FormData(form);
       formData.set('motorcycleId', selectedMotoId);
+      formData.set('motorcycleColor', chosenColor?.id ?? '');
       formData.set('name', `${firstName.trim()} ${lastName.trim()}`);
       formData.set('email', email.trim());
       formData.set('phone', phone.trim());
@@ -191,7 +211,7 @@ export function TestRideForm({
           <div>
             <div className="flex items-center justify-between mb-2">
               <label htmlFor="motorcycleId" className="block text-xs font-heading uppercase tracking-wider text-white font-bold">
-                Select Model *
+                Select Model &amp; Colour *
               </label>
               {activeMotorcycle && (
                 <span className="text-[11px] font-heading text-accent uppercase tracking-wider font-semibold">
@@ -204,9 +224,10 @@ export function TestRideForm({
               <div className="flex items-center gap-4 p-3 bg-secondary/80 border border-border rounded-sm">
                 <div className="relative w-20 h-14 bg-black/40 rounded-sm overflow-hidden shrink-0">
                   <OptimizedImage
-                    src={activeMotorcycle.image}
-                    alt={activeMotorcycle.name}
+                    src={activeColor?.image ?? activeMotorcycle.image}
+                    alt={`${activeMotorcycle.name} in ${activeColor?.name ?? 'standard colour'}`}
                     fill
+                    sizes="80px"
                     className="object-contain p-1"
                   />
                 </div>
@@ -228,7 +249,7 @@ export function TestRideForm({
                       <button
                         key={moto.id}
                         type="button"
-                        onClick={() => setSelectedMotoId(moto.id)}
+                        onClick={() => handleSelectMotorcycle(moto.id)}
                         className={cn(
                           'p-2.5 rounded-sm border text-left flex flex-col justify-between transition-all group relative',
                           isSelected
@@ -238,9 +259,10 @@ export function TestRideForm({
                       >
                         <div className="relative aspect-[16/10] w-full mb-1.5 bg-black/20 rounded-xs overflow-hidden">
                           <OptimizedImage
-                            src={moto.image}
+                            src={moto.colors?.[0]?.image ?? moto.image}
                             alt={moto.name}
                             fill
+                            sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 220px"
                             className="object-contain p-1 group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
@@ -266,7 +288,7 @@ export function TestRideForm({
                   name="motorcycleId"
                   required
                   value={selectedMotoId}
-                  onChange={(e) => setSelectedMotoId(e.target.value)}
+                  onChange={(e) => handleSelectMotorcycle(e.target.value)}
                   className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white text-xs font-heading uppercase tracking-wider focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
                 >
                   <option value="">Select a Royal Enfield Model *</option>
@@ -278,6 +300,17 @@ export function TestRideForm({
                 </select>
               </div>
             )}
+
+            {activeMotorcycle && (
+              <MotorcycleColorPicker
+                motorcycle={activeMotorcycle}
+                value={activeColor?.id}
+                onChange={setSelectedColorId}
+                className="mt-4"
+              />
+            )}
+
+            <input type="hidden" name="motorcycleColor" value={activeColor?.id ?? ''} />
           </div>
 
           {/* Rider Name (First Name + Last Name) */}
@@ -450,7 +483,14 @@ export function TestRideForm({
                   WhatsApp Booking Prepared!
                 </h4>
                 <p className="text-xs text-zinc-300 leading-relaxed">
-                  Your test ride request for the <strong className="text-white">{activeMotorcycle?.name}</strong> at <strong className="text-white">Royal Enfield Bhairahawa</strong> has been composed. If WhatsApp did not open automatically, click below to open your chat:
+                  Your test ride request for the <strong className="text-white">{activeMotorcycle?.name}</strong>
+                  {activeColor ? (
+                    <>
+                      {' '}
+                      in <strong className="text-white">{activeColor.name}</strong>
+                    </>
+                  ) : null}{' '}
+                  at <strong className="text-white">Royal Enfield Bhairahawa</strong> has been composed. If WhatsApp did not open automatically, click below to open your chat:
                 </p>
                 <div className="pt-1 flex flex-wrap items-center gap-3">
                   <a

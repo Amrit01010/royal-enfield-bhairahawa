@@ -49,7 +49,7 @@ export default async function BookTestRidePage({
             Book a test ride
           </h1>
           <p className="text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Feel the legendary thump firsthand. Select your preferred motorcycle model, choose your date, and confirm your test ride appointment at our Bhairahawa showroom instantly on WhatsApp.
+            Feel the legendary thump firsthand. Select your preferred motorcycle, choose an official colourway, pick your date, and confirm your test ride appointment at our Bhairahawa showroom instantly on WhatsApp.
           </p>
         </div>
 

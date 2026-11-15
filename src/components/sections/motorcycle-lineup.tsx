@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { motorcycles } from '@/lib/constants/motorcycles';
+import { motorcycles, getMotorcycleStudioColor } from '@/lib/constants/motorcycles';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/shared/section-heading';
@@ -71,14 +71,27 @@ function MotorcycleCard({
 }: {
   motorcycle: (typeof motorcycles)[number];
 }) {
+  const studioColor = getMotorcycleStudioColor(motorcycle.id);
+  const studioImage = studioColor?.image ?? motorcycle.image;
+
   return (
     <Card className="group relative bg-card border border-border hover:border-accent/60 transition-all duration-300 rounded-sm overflow-hidden flex flex-col justify-between">
       <div>
         {/* Motorcycle visual block */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-[#181818] border-b border-border/60">
+        <div className="relative aspect-[4/3] overflow-hidden bg-[radial-gradient(ellipse_at_50%_68%,#242424_0%,#0c0c0c_75%)] border-b border-border/60">
+          {studioColor && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 opacity-20 blur-2xl"
+              style={{
+                background: `radial-gradient(ellipse at 50% 82%, ${studioColor.hex}, transparent 65%)`,
+              }}
+            />
+          )}
+
           <OptimizedImage
-            src={motorcycle.image}
-            alt={motorcycle.name}
+            src={studioImage}
+            alt={`Royal Enfield ${motorcycle.name} in ${studioColor?.name ?? 'official colourway'}`}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             transformation={{
@@ -86,7 +99,7 @@ function MotorcycleCard({
               quality: 80,
               format: 'auto',
             }}
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
             fallbackText="RE"
           />
 

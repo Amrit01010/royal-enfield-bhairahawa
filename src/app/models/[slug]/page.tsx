@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { TestRideForm } from '@/components/rides/test-ride-form';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/shared/section-heading';
-import { getMotorcycle, motorcycles } from '@/lib/constants/motorcycles';
+import { getMotorcycle, getMotorcycleStudioColor, motorcycles } from '@/lib/constants/motorcycles';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 
 export function generateStaticParams() {
@@ -36,6 +36,9 @@ export default async function MotorcyclePage({
   const motorcycle = getMotorcycle(slug);
   if (!motorcycle) notFound();
 
+  const studioColor = getMotorcycleStudioColor(motorcycle.id);
+  const studioImage = studioColor?.image ?? motorcycle.image;
+
   return (
     <div className="pt-24 pb-24">
       <div className="container mx-auto px-4 lg:px-8">
@@ -48,10 +51,20 @@ export default async function MotorcyclePage({
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 mb-20">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-border bg-[#141414]">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-border bg-[radial-gradient(ellipse_at_50%_68%,#242424_0%,#0c0c0c_75%)]">
+            {studioColor && (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 opacity-20 blur-2xl"
+                style={{
+                  background: `radial-gradient(ellipse at 50% 82%, ${studioColor.hex}, transparent 65%)`,
+                }}
+              />
+            )}
+
             <OptimizedImage
-              src={motorcycle.image}
-              alt={motorcycle.name}
+              src={studioImage}
+              alt={`Royal Enfield ${motorcycle.name} in ${studioColor?.name ?? 'official colourway'}`}
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -60,7 +73,7 @@ export default async function MotorcyclePage({
                 quality: 85,
                 format: 'auto',
               }}
-              className="object-cover"
+              className="object-contain p-4 sm:p-6"
               fallbackText="ROYAL ENFIELD"
             />
             {motorcycle.isNew && (
