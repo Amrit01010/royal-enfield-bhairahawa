@@ -1,25 +1,29 @@
 // src/app/accessories/page.tsx
 import { AccessoriesCatalog } from '@/components/accessories/accessories-catalog';
 import { SectionHeading } from '@/components/shared/section-heading';
-import { accessories, accessoryCategories } from '@/lib/constants/accessories';
+import { accessories, accessoryBikes, accessoryCategories } from '@/lib/constants/accessories';
 import type { AccessoryCategory } from '@/lib/types';
 
 export const metadata = {
-  title: 'Accessories',
+  title: 'Genuine Accessories & Gear',
   description:
-    'Explore genuine Royal Enfield accessories to customize your motorcycle. Visit the showroom for availability and fitment.',
+    'Explore genuine Royal Enfield accessories tailored to each motorcycle. Add items to your cart and request quotation and fitment directly via WhatsApp.',
 };
 
 export default async function AccessoriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; q?: string }>;
+  searchParams: Promise<{ category?: string; bike?: string; q?: string }>;
 }) {
   const params = await searchParams;
   const initialCategory = accessoryCategories.includes(
     params.category as AccessoryCategory
   )
     ? params.category
+    : undefined;
+
+  const initialBike = accessoryBikes.some((b) => b.id === params.bike)
+    ? params.bike
     : undefined;
 
   return (
@@ -46,17 +50,17 @@ export default async function AccessoriesPage({
 
         <div className="container mx-auto px-4 lg:px-8 relative">
           <SectionHeading
-            label="Accessories"
-            title="Genuine Royal Enfield Accessories"
-            description="Authentic accessories designed to enhance protection, comfort and style. Visit our showroom for availability, fitment advice and pricing."
+            label="Showroom Accessories"
+            title="Genuine Royal Enfield Accessories (GMA)"
+            description="Official accessories engineered specifically for your motorcycle model. Add items to your inquiry cart and connect directly with our Bhairahawa showroom owner on WhatsApp for availability and fitment."
             align="center"
           />
 
           <div className="mt-2 mx-auto max-w-3xl grid grid-cols-3 border border-border bg-card/60 divide-x divide-border rounded-sm">
             {[
-              { value: String(accessories.length), label: 'Accessories' },
-              { value: String(accessoryCategories.length), label: 'Categories' },
-              { value: '100%', label: 'Genuine' },
+              { value: String(accessories.length), label: 'Genuine Parts' },
+              { value: String(accessoryBikes.length - 1), label: 'Motorcycles' },
+              { value: '100%', label: 'OEM Fitment' },
             ].map((stat) => (
               <div key={stat.label} className="py-4 text-center">
                 <p className="text-2xl sm:text-3xl font-heading font-bold text-white">
@@ -74,6 +78,7 @@ export default async function AccessoriesPage({
       <div className="container mx-auto px-4 lg:px-8 pt-10">
         <AccessoriesCatalog
           initialCategory={initialCategory}
+          initialBike={initialBike}
           initialQuery={params.q}
         />
       </div>

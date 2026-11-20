@@ -35,28 +35,30 @@ function parseStoredCart(raw: string | null): CartItem[] {
   try {
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
-    return parsed
-      .map((item) => {
-        if (
-          !item ||
-          typeof item !== 'object' ||
-          typeof (item as CartItem).id !== 'string' ||
-          typeof (item as CartItem).name !== 'string' ||
-          typeof (item as CartItem).price !== 'number'
-        ) {
-          return null;
-        }
+    const validItems: CartItem[] = [];
+    for (const item of parsed) {
+      if (
+        item &&
+        typeof item === 'object' &&
+        typeof (item as CartItem).id === 'string' &&
+        typeof (item as CartItem).name === 'string'
+      ) {
         const cartItem = item as CartItem;
-        return {
+        validItems.push({
           id: cartItem.id,
           name: cartItem.name,
           category: cartItem.category,
-          price: cartItem.price,
+          price: typeof cartItem.price === 'number' ? cartItem.price : undefined,
           image: cartItem.image,
           quantity: clampQuantity(Number(cartItem.quantity) || 1),
-        };
-      })
-      .filter((item): item is CartItem => item !== null);
+          compatibleBikes: Array.isArray(cartItem.compatibleBikes)
+            ? cartItem.compatibleBikes
+            : [],
+          partNumber: cartItem.partNumber || undefined,
+        });
+      }
+    }
+    return validItems;
   } catch {
     return [];
   }
@@ -130,9 +132,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           id: accessory.id,
           name: accessory.name,
           category: accessory.category,
-          price: accessory.price,
+          price: accessory.price ?? 0,
           image: accessory.image,
           quantity: clampQuantity(quantity),
+          compatibleBikes: accessory.compatibleBikes,
+          partNumber: accessory.partNumber,
         },
       ];
     });
@@ -189,7 +193,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   const subtotal = useMemo(
-    () => items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    () => items.reduce((sum, item) => sum + (item.price ?? 0) * item.quantity, 0),
     [items]
   );
 

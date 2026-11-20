@@ -1,7 +1,8 @@
+// src/components/accessories/product-actions.tsx
 'use client';
 
 import Link from 'next/link';
-import { ShoppingBag } from 'lucide-react';
+import { Check, ShoppingBag } from 'lucide-react';
 import { QuantityControls } from '@/components/accessories/quantity-controls';
 import { Button } from '@/components/ui/button';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
@@ -17,54 +18,54 @@ export function AccessoryProductActions({ accessory }: { accessory: Accessory })
     buildAccessoryWhatsAppMessage(accessory, activeQuantity)
   );
 
-  if (quantity > 0) {
-    return (
+  return (
+    <div className="space-y-4">
+      {/* Primary Actions Row */}
       <div className="flex flex-wrap items-center gap-3">
-        <QuantityControls
-          quantity={quantity}
-          onDecrement={() => decrement(accessory.id)}
-          onIncrement={() => increment(accessory.id)}
-        />
-        <Button
-          variant="outline"
-          className="border-white/10 bg-white/5 text-white hover:bg-white/10"
-          asChild
-        >
-          <Link href="/cart">Go to cart</Link>
-        </Button>
+        {quantity > 0 ? (
+          <>
+            <QuantityControls
+              quantity={quantity}
+              onDecrement={() => decrement(accessory.id)}
+              onIncrement={() => increment(accessory.id)}
+            />
+            <Button
+              className="bg-accent/20 border border-accent text-accent hover:bg-accent hover:text-white font-heading text-xs uppercase tracking-wider font-bold h-11 px-5"
+              asChild
+            >
+              <Link href="/cart">
+                <Check className="w-4 h-4 mr-2" />
+                View in Cart ({quantity})
+              </Link>
+            </Button>
+          </>
+        ) : (
+          <Button
+            type="button"
+            size="lg"
+            className="bg-accent hover:bg-accent/90 text-white font-heading text-xs uppercase tracking-wider font-bold h-12 px-7 rounded-sm shadow-md transition-all"
+            onClick={() => addItem(accessory)}
+          >
+            <ShoppingBag className="w-4 h-4 mr-2" />
+            Add to Inquiry Cart
+          </Button>
+        )}
+
+        {/* WhatsApp Direct Enquiry */}
         <a
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 h-10 px-4 rounded-sm bg-[#25D366] hover:bg-[#20ba5a] text-black font-heading text-xs uppercase font-bold tracking-wider transition-colors shadow-sm"
+          className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-sm bg-[#25D366] hover:bg-[#20ba5a] text-black font-heading text-xs uppercase font-bold tracking-wider transition-colors shadow-sm"
         >
-          <WhatsAppIcon className="w-4 h-4 text-black" />
-          Order ({quantity}) on WhatsApp
+          <WhatsAppIcon className="w-4 h-4 text-black shrink-0" />
+          Enquire on WhatsApp
         </a>
       </div>
-    );
-  }
 
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button
-        type="button"
-        size="lg"
-        className="bg-accent hover:bg-accent/90 text-white font-semibold h-12 px-7"
-        onClick={() => addItem(accessory)}
-      >
-        <ShoppingBag className="w-4 h-4 mr-2" />
-        Add to cart
-      </Button>
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 h-12 px-6 rounded-sm bg-[#25D366] hover:bg-[#20ba5a] text-black font-heading text-xs uppercase font-bold tracking-wider transition-colors shadow-sm"
-      >
-        <WhatsAppIcon className="w-4 h-4 text-black" />
-        Buy via WhatsApp
-      </a>
+      <p className="text-[11px] text-zinc-400">
+        Add multiple accessories to your inquiry cart to request a combined availability & fitting quote.
+      </p>
     </div>
   );
 }

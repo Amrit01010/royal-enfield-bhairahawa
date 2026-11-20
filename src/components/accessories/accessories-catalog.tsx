@@ -1,17 +1,23 @@
+// src/components/accessories/accessories-catalog.tsx
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { Filter, RotateCcw, Search, X } from 'lucide-react';
 import { ProductCard } from '@/components/accessories/product-card';
 import { Input } from '@/components/ui/input';
-import { accessories, accessoryCategories } from '@/lib/constants/accessories';
+import {
+  accessories,
+  accessoryBikes,
+  accessoryCategories,
+  formatBikeName,
+} from '@/lib/constants/accessories';
 import type { AccessoryCategory } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 type SortOption = 'featured' | 'name' | 'name-desc' | 'category';
 
 const sortOptions: { value: SortOption; label: string }[] = [
-  { value: 'featured', label: 'Featured' },
+  { value: 'featured', label: 'Featured Accessories' },
   { value: 'name', label: 'Name A–Z' },
   { value: 'name-desc', label: 'Name Z–A' },
   { value: 'category', label: 'Category' },
@@ -19,12 +25,17 @@ const sortOptions: { value: SortOption; label: string }[] = [
 
 export function AccessoriesCatalog({
   initialCategory,
+  initialBike,
   initialQuery,
 }: {
   initialCategory?: string;
+  initialBike?: string;
   initialQuery?: string;
 }) {
   const [query, setQuery] = useState(initialQuery ?? '');
+  const [selectedBike, setSelectedBike] = useState<string>(
+    accessoryBikes.some((b) => b.id === initialBike) ? (initialBike as string) : 'all'
+  );
   const [category, setCategory] = useState<AccessoryCategory | 'All'>(
     accessoryCategories.includes(initialCategory as AccessoryCategory)
       ? (initialCategory as AccessoryCategory)
@@ -32,10 +43,33 @@ export function AccessoriesCatalog({
   );
   const [sort, setSort] = useState<SortOption>('featured');
 
-  const counts = useMemo(() => {
-    const map: Record<string, number> = { All: accessories.length };
-    for (const item of accessories) {
+  // Filtered by selected bike first to derive category counts accurately
+  const bikeFilteredAccessories = useMemo(() => {
+    if (selectedBike === 'all') return accessories;
+    return accessories.filter(
+      (item) =>
+        item.compatibleBikes.includes(selectedBike) ||
+        item.compatibleBikes.includes('all')
+    );
+  }, [selectedBike]);
+
+  const categoryCounts = useMemo(() => {
+    const map: Record<string, number> = { All: bikeFilteredAccessories.length };
+    for (const item of bikeFilteredAccessories) {
       map[item.category] = (map[item.category] ?? 0) + 1;
+    }
+    return map;
+  }, [bikeFilteredAccessories]);
+
+  const bikeCounts = useMemo(() => {
+    const map: Record<string, number> = { all: accessories.length };
+    for (const bike of accessoryBikes) {
+      if (bike.id === 'all') continue;
+      map[bike.id] = accessories.filter(
+        (item) =>
+          item.compatibleBikes.includes(bike.id) ||
+          item.compatibleBikes.includes('all')
+      ).length;
     }
     return map;
   }, []);
@@ -43,14 +77,23 @@ export function AccessoriesCatalog({
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const next = accessories.filter((item) => {
+      const matchesBike =
+        selectedBike === 'all' ||
+        item.compatibleBikes.includes(selectedBike) ||
+        item.compatibleBikes.includes('all');
+
       const matchesCategory = category === 'All' || item.category === category;
+
       const matchesQuery =
         !needle ||
         item.name.toLowerCase().includes(needle) ||
         item.category.toLowerCase().includes(needle) ||
         item.details.toLowerCase().includes(needle) ||
-        item.description.toLowerCase().includes(needle);
-      return matchesCategory && matchesQuery;
+        item.description.toLowerCase().includes(needle) ||
+        (item.partNumber && item.partNumber.toLowerCase().includes(needle)) ||
+        item.compatibleBikes.some((b) => formatBikeName(b).toLowerCase().includes(needle));
+
+      return matchesBike && matchesCategory && matchesQuery;
     });
 
     const sorted = [...next];
@@ -62,19 +105,72 @@ export function AccessoriesCatalog({
           a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
       );
     return sorted;
-  }, [category, query, sort]);
+  }, [category, query, selectedBike, sort]);
 
-  const hasFilters = category !== 'All' || query.trim() !== '';
+  const hasFilters = selectedBike !== 'all' || category !== 'All' || query.trim() !== '';
 
   const reset = () => {
     setQuery('');
+    setSelectedBike('all');
     setCategory('All');
     setSort('featured');
   };
 
   return (
     <div>
-      {/* Sticky filter bar */}
+      {/* Motorcycle Selector (Official Showroom Style) */}
+      <section className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-accent" />
+            <h2 className="text-xs font-heading font-bold uppercase tracking-widest text-zinc-300">
+              Filter by Motorcycle
+            </h2>
+          </div>
+          {selectedBike !== 'all' && (
+            <button
+              type="button"
+              onClick={() => setSelectedBike('all')}
+              className="text-[11px] font-heading font-semibold text-accent hover:underline flex items-center gap-1 uppercase tracking-wider"
+            >
+              Show all motorcycles
+            </button>
+          )}
+        </div>
+
+        {/* Bike Badges / Tabs */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+          {accessoryBikes.map((bike) => {
+            const isSelected = selectedBike === bike.id;
+            const count = bikeCounts[bike.id] ?? 0;
+            return (
+              <button
+                key={bike.id}
+                type="button"
+                onClick={() => setSelectedBike(bike.id)}
+                className={cn(
+                  'relative flex flex-col items-start p-2.5 sm:p-3 rounded-sm border text-left transition-all duration-200 group',
+                  isSelected
+                    ? 'bg-accent/15 border-accent text-white shadow-md shadow-accent/5'
+                    : 'bg-card border-border text-zinc-400 hover:text-white hover:border-zinc-700'
+                )}
+              >
+                {isSelected && (
+                  <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-accent" />
+                )}
+                <span className="text-[11px] font-heading font-bold uppercase tracking-wider line-clamp-1 group-hover:text-white">
+                  {bike.shortName}
+                </span>
+                <span className="text-[10px] text-zinc-500 mt-1">
+                  {count} {count === 1 ? 'part' : 'parts'}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Sticky search & category filter bar */}
       <div className="bg-card/95 backdrop-blur border border-border border-t-2 border-t-accent rounded-sm p-4 lg:p-5 mb-8 sticky top-20 z-20 shadow-xl">
         <div className="flex flex-col lg:flex-row gap-3">
           <div className="relative flex-1">
@@ -82,7 +178,7 @@ export function AccessoriesCatalog({
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search guards, luggage, seats, mirrors..."
+              placeholder="Search guards, seats, luggage, part numbers..."
               className="pl-10 pr-10 h-11 py-0"
               aria-label="Search accessories"
             />
@@ -115,6 +211,7 @@ export function AccessoriesCatalog({
         <div className="flex gap-2 mt-4 overflow-x-auto sm:flex-wrap sm:overflow-visible -mx-1 px-1 pb-1 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {(['All', ...accessoryCategories] as const).map((item) => {
             const active = category === item;
+            const count = categoryCounts[item] ?? 0;
             return (
               <button
                 key={item}
@@ -134,7 +231,7 @@ export function AccessoriesCatalog({
                     active ? 'bg-black/25 text-white' : 'bg-black/30 text-zinc-500'
                   )}
                 >
-                  {counts[item] ?? 0}
+                  {count}
                 </span>
               </button>
             );
@@ -142,44 +239,52 @@ export function AccessoriesCatalog({
         </div>
       </div>
 
-      {/* Result summary */}
-      <div className="flex items-center justify-between gap-4 mb-6">
-        <p className="text-xs font-heading uppercase tracking-widest text-zinc-400">
-          <span className="text-white">{filtered.length}</span>{' '}
-          {filtered.length === 1 ? 'Accessory' : 'Accessories'}
+      {/* Result summary & Active filters */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div className="flex flex-wrap items-center gap-2 text-xs font-heading uppercase tracking-widest text-zinc-400">
+          <span className="text-white font-bold">{filtered.length}</span>{' '}
+          {filtered.length === 1 ? 'Genuine Accessory' : 'Genuine Accessories'}
+          {selectedBike !== 'all' && (
+            <>
+              {' '}
+              for <span className="text-white font-bold">{formatBikeName(selectedBike)}</span>
+            </>
+          )}
           {category !== 'All' && (
             <>
               {' '}
-              in <span className="text-accent">{category}</span>
+              in <span className="text-accent font-bold">{category}</span>
             </>
           )}
-        </p>
+        </div>
+
         {hasFilters && (
           <button
             type="button"
             onClick={reset}
             className="inline-flex items-center gap-1.5 text-xs font-heading uppercase tracking-widest text-zinc-400 hover:text-accent transition-colors"
           >
-            <X className="w-3.5 h-3.5" />
-            Clear filters
+            <RotateCcw className="w-3.5 h-3.5" />
+            Clear all filters
           </button>
         )}
       </div>
 
+      {/* Catalog Grid */}
       {filtered.length === 0 ? (
         <div className="bg-card border border-dashed border-border rounded-sm p-12 text-center">
           <p className="text-white font-heading text-lg uppercase font-bold mb-2">
-            No Matching Accessories
+            No Accessories Found
           </p>
           <p className="text-xs text-zinc-400 mb-6">
-            Try a different search keyword or category filter.
+            We couldn&apos;t find matching genuine gear for the selected filters.
           </p>
           <button
             type="button"
             onClick={reset}
-            className="px-4 py-2 rounded-sm border border-accent text-accent hover:bg-accent hover:text-white transition-colors text-xs font-heading font-bold uppercase tracking-wider"
+            className="px-5 py-2.5 rounded-sm border border-accent bg-accent/10 text-accent hover:bg-accent hover:text-white transition-colors text-xs font-heading font-bold uppercase tracking-wider"
           >
-            Reset filters
+            Show All Genuine Accessories
           </button>
         </div>
       ) : (

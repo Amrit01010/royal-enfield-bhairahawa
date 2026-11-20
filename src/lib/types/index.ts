@@ -86,27 +86,36 @@ export interface HeroSlide {
 }
 
 export type AccessoryCategory =
+  | 'Protection'
+  | 'Touring & Luggage'
+  | 'Comfort'
+  | 'Style & Body'
+  | 'Electrical & Controls'
   | 'Safety Gear'
   | 'Touring'
-  | 'Performance'
-  | 'Protection'
-  | 'Comfort';
+  | 'Performance';
 
 export interface Accessory {
   id: string;
   name: string;
   category: AccessoryCategory;
-  price: number;
+  price?: number;
   details: string;
   description: string;
   image: string;
+  compatibleBikes: string[];
+  partNumber?: string;
+  material?: string;
+  warranty?: string;
 }
 
 export interface CartItem {
   id: string;
   name: string;
   category: AccessoryCategory;
-  price: number;
+  price?: number;
   image: string;
   quantity: number;
+  compatibleBikes?: string[];
+  partNumber?: string;
 }

@@ -1,7 +1,7 @@
 // src/lib/whatsapp.ts
 import { siteConfig } from '@/config/site';
 import type { Accessory, CartItem } from '@/lib/types';
-import { formatNpr } from '@/lib/utils';
+import { formatBikeName } from '@/lib/constants/accessories';
 
 /**
  * Normalizes any phone string into digits for WhatsApp wa.me links.
@@ -24,55 +24,82 @@ export function buildWhatsAppUrl(message: string, customPhone?: string): string 
 }
 
 /**
- * Message template for cart items purchase inquiry/order.
+ * Message template for cart items inquiry sent to the showroom owner.
+ * Strictly no e-commerce prices shown; asks for quotation, stock and fitting.
  */
-export function buildCartWhatsAppMessage(items: CartItem[], subtotal: number): string {
+export function buildCartWhatsAppMessage(
+  items: CartItem[],
+  bikeOrSubtotal?: string | number,
+  selectedBikeName?: string
+): string {
+  // Support both (items, bikeName) and legacy (items, subtotal, bikeName)
+  const bike =
+    typeof bikeOrSubtotal === 'string'
+      ? bikeOrSubtotal
+      : selectedBikeName;
+
   const itemsBreakdown = items
-    .map(
-      (item, idx) =>
-        `${idx + 1}. ${item.name} (${item.category})\n   Quantity: ${item.quantity} × ${formatNpr(item.price)} = ${formatNpr(item.price * item.quantity)}`
-    )
+    .map((item, idx) => {
+      const partInfo = item.partNumber ? ` (Part: ${item.partNumber})` : '';
+      const fitment =
+        item.compatibleBikes && item.compatibleBikes.length > 0 && !item.compatibleBikes.includes('all')
+          ? `\n   Fitment: ${item.compatibleBikes.map(formatBikeName).join(', ')}`
+          : '';
+      return `${idx + 1}. ${item.name}${partInfo}\n   Category: ${item.category} | Qty: ${item.quantity}${fitment}`;
+    })
     .join('\n\n');
 
   const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  return [
+  const lines = [
     `Namaste Royal Enfield Bhairahawa!`,
     ``,
-    `I would like to order the following accessories & riding gear:`,
+    `I would like to inquire about the following genuine Royal Enfield accessories for my motorcycle:`,
     ``,
+    `----------------------------------------`,
     itemsBreakdown,
-    ``,
     `----------------------------------------`,
-    `Total Items: ${totalCount}`,
-    `Order Total: ${formatNpr(subtotal)}`,
-    `----------------------------------------`,
+    `Total Accessories: ${totalCount}`,
+    bike && bike !== 'all' ? `Motorcycle Model: ${formatBikeName(bike)}` : null,
     ``,
-    `Please confirm item availability and let me know payment and pickup/delivery options at your showroom (${siteConfig.location.address}).`,
-  ].join('\n');
+    `Please confirm stock availability, showroom quotation, and fitting service at your Bhairahawa showroom (${siteConfig.location.address}).`,
+    ``,
+    `Thank you!`,
+  ];
+
+  return lines.filter(Boolean).join('\n');
 }
 
 /**
- * Message template for a single accessory purchase or inquiry.
+ * Message template for a single accessory inquiry.
+ * Strictly no prices shown; prompts showroom owner for quotation & availability.
  */
 export function buildAccessoryWhatsAppMessage(
   accessory: Accessory,
-  quantity = 1
+  quantity = 1,
+  bikeModel?: string
 ): string {
-  const total = accessory.price * quantity;
+  const fitment =
+    accessory.compatibleBikes && accessory.compatibleBikes.length > 0 && !accessory.compatibleBikes.includes('all')
+      ? accessory.compatibleBikes.map(formatBikeName).join(', ')
+      : 'Universal Fit / All Models';
+
   return [
     `Namaste Royal Enfield Bhairahawa!`,
     ``,
-    `I am interested in purchasing this accessory:`,
+    `I am inquiring about this genuine Royal Enfield accessory:`,
     `• Product: ${accessory.name}`,
     `• Category: ${accessory.category}`,
-    `• Price: ${formatNpr(accessory.price)}`,
-    quantity > 1 ? `• Quantity: ${quantity}` : null,
-    quantity > 1 ? `• Total: ${formatNpr(total)}` : null,
+    accessory.partNumber ? `• Part No: ${accessory.partNumber}` : null,
+    `• Fitment: ${fitment}`,
+    quantity > 1 ? `• Quantity: ${quantity}` : `• Quantity: 1`,
+    bikeModel && bikeModel !== 'all' ? `• My Motorcycle: ${formatBikeName(bikeModel)}` : null,
     ``,
     `Details: ${accessory.details}`,
     ``,
-    `Is this currently available in stock at the Bhairahawa showroom? How can I complete the purchase?`,
+    `Could you please let me know current availability, showroom pricing, and installation at your Bhairahawa showroom (${siteConfig.location.address})?`,
+    ``,
+    `Thank you!`,
   ]
     .filter(Boolean)
     .join('\n');

@@ -31,7 +31,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/hunter-350',
     image: '/Royal Enfield/bikes/hunter-350.jpg',
     actionImage: '/Royal Enfield/actions/hunter.jpg',
-    studioColorId: 'mumbai-yellow',
+    studioColorId: 'dapper-grey',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',
@@ -50,7 +50,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/meteor-350',
     image: '/Royal Enfield/bikes/meteor-350.jpg',
     actionImage: '/Royal Enfield/actions/meteor.jpg',
-    studioColorId: 'stellar-marine-blue',
+    studioColorId: 'supernova-black',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',
@@ -69,7 +69,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/goan-classic-350',
     image: '/Royal Enfield/bikes/goan-classic-350.jpg',
     actionImage: '/Royal Enfield/actions/goan.jpg',
-    studioColorId: 'trip-teal',
+    studioColorId: 'supernova-black',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',
@@ -88,7 +88,7 @@ export const heroSlides: HeroSlide[] = [
     href: '/models/classic-350',
     image: '/Royal Enfield/bikes/classic-350.jpg',
     actionImage: '/Royal Enfield/actions/classic-black.jpg',
-    studioColorId: 'madras-red',
+    studioColorId: 'stealth-black',
     specs: {
       displacement: '349 cc',
       power: '20.2 BHP',

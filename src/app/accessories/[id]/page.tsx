@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, BadgeCheck, MapPin, ShieldCheck, Wrench } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, CheckCircle2, MapPin, ShieldCheck, Wrench } from 'lucide-react';
 import { ProductCard } from '@/components/accessories/product-card';
+import { AccessoryProductActions } from '@/components/accessories/product-actions';
 import { Badge } from '@/components/ui/badge';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 import {
-  accessoryCategorySlugs,
   accessories,
+  accessoryCategorySlugs,
+  formatBikeName,
   getAccessory,
 } from '@/lib/constants/accessories';
 
@@ -25,15 +27,15 @@ export async function generateMetadata({
     return { title: 'Accessories' };
   }
   return {
-    title: accessory.name,
+    title: `${accessory.name} | Royal Enfield Bhairahawa`,
     description: accessory.details,
   };
 }
 
 const assurances = [
-  { icon: BadgeCheck, title: 'Genuine', text: 'Official Royal Enfield accessory' },
-  { icon: Wrench, title: 'Perfect fit', text: 'Engineered for your motorcycle' },
-  { icon: ShieldCheck, title: 'Warranty', text: 'Backed by manufacturer warranty' },
+  { icon: BadgeCheck, title: '100% Genuine GMA', text: 'Official Royal Enfield motorcycle accessory' },
+  { icon: Wrench, title: 'Showroom Fitting', text: 'Professional installation available in Bhairahawa' },
+  { icon: ShieldCheck, title: 'Official Warranty', text: 'Backed by Royal Enfield manufacturer warranty' },
 ];
 
 export default async function AccessoryDetailPage({
@@ -53,6 +55,11 @@ export default async function AccessoryDetailPage({
   const related = accessories
     .filter((item) => item.category === accessory.category && item.id !== accessory.id)
     .slice(0, 4);
+
+  const isUniversal =
+    !accessory.compatibleBikes ||
+    accessory.compatibleBikes.length === 0 ||
+    accessory.compatibleBikes.includes('all');
 
   return (
     <div className="pt-24 pb-24">
@@ -96,14 +103,37 @@ export default async function AccessoryDetailPage({
                 fallbackText="GEAR"
               />
             </div>
+
+            {/* Genuine GMA Hallmark */}
+            <div className="mt-4 flex items-center justify-between p-3 bg-card border border-border rounded-sm">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                <span className="text-xs font-heading font-bold uppercase tracking-wider text-white">
+                  Genuine Motorcycle Accessory (GMA)
+                </span>
+              </div>
+              {accessory.partNumber && (
+                <span className="text-[11px] font-mono text-zinc-400 bg-black/60 px-2 py-0.5 rounded border border-white/10">
+                  {accessory.partNumber}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Info */}
           <div>
-            <Badge className="bg-black/80 text-accent border border-accent/30 text-[10px] font-heading font-bold uppercase tracking-wider mb-4 rounded-sm">
-              {accessory.category}
-            </Badge>
-            <h1 className="text-3xl sm:text-5xl font-heading font-bold uppercase text-white tracking-wide mb-6">
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <Badge className="bg-black/80 text-accent border border-accent/30 text-[10px] font-heading font-bold uppercase tracking-wider rounded-sm">
+                {accessory.category}
+              </Badge>
+              {accessory.partNumber && (
+                <span className="text-xs font-mono text-zinc-400 tracking-wider">
+                  PART #{accessory.partNumber}
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold uppercase text-white tracking-wide mb-4">
               {accessory.name}
             </h1>
 
@@ -112,30 +142,77 @@ export default async function AccessoryDetailPage({
                 {accessory.details}
               </p>
             </div>
-            <p className="text-zinc-400 leading-relaxed mb-8 text-sm">
+
+            <p className="text-zinc-400 leading-relaxed mb-6 text-sm">
               {accessory.description}
             </p>
 
-            {/* Showroom CTA (replaces price and cart) */}
-            <div className="bg-card border border-border border-t-2 border-t-accent rounded-sm p-5 mb-6">
+            {/* Motorcycle Fitment Section */}
+            <div className="bg-secondary/40 border border-border rounded-sm p-4 mb-6">
+              <h4 className="text-[11px] font-heading font-bold uppercase tracking-widest text-zinc-300 mb-2.5 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-accent rounded-full" />
+                Motorcycle Compatibility:
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {isUniversal ? (
+                  <span className="bg-white/5 border border-white/10 text-white text-xs font-heading uppercase px-2.5 py-1 rounded-sm">
+                    Universal Fit (All Royal Enfield Models)
+                  </span>
+                ) : (
+                  accessory.compatibleBikes.map((bikeId) => (
+                    <span
+                      key={bikeId}
+                      className="bg-black/60 border border-border text-zinc-200 text-xs font-heading uppercase tracking-wide px-2.5 py-1 rounded-sm"
+                    >
+                      {formatBikeName(bikeId)}
+                    </span>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Specifications Box (Material / Warranty) */}
+            {(accessory.material || accessory.warranty) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                {accessory.material && (
+                  <div className="p-3 bg-card border border-border rounded-sm">
+                    <p className="text-[10px] font-heading uppercase tracking-widest text-zinc-500">
+                      Material / Construction
+                    </p>
+                    <p className="text-xs font-semibold text-white mt-1">
+                      {accessory.material}
+                    </p>
+                  </div>
+                )}
+                {accessory.warranty && (
+                  <div className="p-3 bg-card border border-border rounded-sm">
+                    <p className="text-[10px] font-heading uppercase tracking-widest text-zinc-500">
+                      Showroom Guarantee
+                    </p>
+                    <p className="text-xs font-semibold text-white mt-1">
+                      {accessory.warranty}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Add to Inquiry Cart & WhatsApp Direct Action */}
+            <div className="bg-card border border-border border-t-2 border-t-accent rounded-sm p-5 mb-8">
               <div className="flex items-start gap-3 mb-4">
                 <MapPin className="w-5 h-5 text-accent mt-0.5 shrink-0" />
                 <div>
                   <p className="font-heading font-bold uppercase tracking-wide text-white text-sm">
-                    Available at our showroom
+                    Bhairahawa Showroom Inquiries
                   </p>
                   <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                    Visit us for pricing, availability and professional fitting
-                    for your motorcycle.
+                    Add to your inquiry cart to request availability, fitting, and quotation, or chat directly with our showroom owner via WhatsApp.
                   </p>
                 </div>
               </div>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center w-full sm:w-auto px-6 h-11 bg-accent text-white border border-accent rounded-sm font-heading text-xs font-bold uppercase tracking-wider hover:bg-accent/90 transition-colors"
-              >
-                Enquire at showroom
-              </Link>
+
+              {/* Client Product Actions */}
+              <AccessoryProductActions accessory={accessory} />
             </div>
 
             {/* Assurances */}

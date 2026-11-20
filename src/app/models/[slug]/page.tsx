@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Wrench } from 'lucide-react';
 import { TestRideForm } from '@/components/rides/test-ride-form';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { getMotorcycle, getMotorcycleStudioColor, motorcycles } from '@/lib/constants/motorcycles';
 import { OptimizedImage } from '@/components/shared/optimized-image';
@@ -100,7 +101,7 @@ export default async function MotorcyclePage({
               {motorcycle.description}
             </p>
             {motorcycle.specs && (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 mb-6">
                 {Object.entries(motorcycle.specs).map(([key, value]) => (
                   <div key={key} className="bg-card border border-border rounded-sm p-3.5">
                     <p className="font-heading text-[10px] tracking-[0.2em] text-zinc-400 uppercase font-medium mb-1">
@@ -111,6 +112,31 @@ export default async function MotorcyclePage({
                 ))}
               </div>
             )}
+
+            <div className="pt-5 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-card/60 p-4 rounded-sm border border-border">
+              <div className="flex items-start gap-3">
+                <Wrench className="w-5 h-5 text-accent mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-heading font-bold uppercase text-white text-sm">
+                    Genuine {motorcycle.name} Accessories
+                  </p>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    Explore factory crash guards, touring seats, luggage, and custom styling.
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-border hover:border-accent text-white font-heading text-xs uppercase tracking-wider shrink-0"
+                asChild
+              >
+                <Link href={`/accessories?bike=${motorcycle.id}`}>
+                  View Accessories
+                  <ArrowUpRight className="w-3.5 h-3.5 ml-1.5" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
 
