@@ -7,6 +7,8 @@ import { OptimizedImage } from '@/components/shared/optimized-image';
 import { useCart } from '@/hooks/use-cart';
 import type { Accessory } from '@/lib/types';
 import { formatBikeName } from '@/lib/constants/accessories';
+import { getImageKitUrl } from '@/lib/imagekit';
+import { prefetchEngine } from '@/lib/image-prefetch';
 
 interface ProductCardProps {
   accessory: Accessory;
@@ -39,6 +41,20 @@ export function ProductCard({ accessory }: ProductCardProps) {
       {/* Clickable Image Container */}
       <Link
         href={`/accessories/${accessory.id}`}
+        onMouseEnter={() => {
+          if (accessory.image) {
+            prefetchEngine.prefetchImmediate(
+              getImageKitUrl(accessory.image, { width: 1200, quality: 85, format: 'auto' })
+            );
+          }
+        }}
+        onFocus={() => {
+          if (accessory.image) {
+            prefetchEngine.prefetchImmediate(
+              getImageKitUrl(accessory.image, { width: 1200, quality: 85, format: 'auto' })
+            );
+          }
+        }}
         className="relative aspect-[4/3] overflow-hidden bg-[#141414] border-b border-border block"
       >
         <OptimizedImage

@@ -13,6 +13,8 @@ import {
 } from '@/lib/constants/accessories';
 import type { AccessoryCategory } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { getImageKitUrl } from '@/lib/imagekit';
+import { useImagePrefetch } from '@/hooks/use-image-prefetch';
 
 type SortOption = 'featured' | 'name' | 'name-desc' | 'category';
 
@@ -42,6 +44,14 @@ export function AccessoriesCatalog({
       : 'All'
   );
   const [sort, setSort] = useState<SortOption>('featured');
+
+  // Pre-generate deterministic URLs for top catalog accessories
+  const initialThumbUrls = useMemo(() => {
+    return accessories.slice(0, 8).map((a) =>
+      getImageKitUrl(a.image, { width: 700, quality: 80, format: 'auto' })
+    );
+  }, []);
+  useImagePrefetch(initialThumbUrls, { priority: 15 });
 
   // Filtered by selected bike first to derive category counts accurately
   const bikeFilteredAccessories = useMemo(() => {
@@ -288,7 +298,7 @@ export function AccessoriesCatalog({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 [content-visibility:auto]">
           {filtered.map((accessory) => (
             <ProductCard key={accessory.id} accessory={accessory} />
           ))}

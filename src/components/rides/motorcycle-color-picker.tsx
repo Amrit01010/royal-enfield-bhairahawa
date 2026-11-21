@@ -1,10 +1,13 @@
 // src/components/rides/motorcycle-color-picker.tsx
 'use client';
 
+import { useMemo } from 'react';
 import { Check } from 'lucide-react';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 import type { Motorcycle } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { getImageKitUrl } from '@/lib/imagekit';
+import { useImagePrefetch } from '@/hooks/use-image-prefetch';
 
 interface MotorcycleColorPickerProps {
   motorcycle: Motorcycle;
@@ -19,10 +22,27 @@ export function MotorcycleColorPicker({
   onChange,
   className,
 }: MotorcycleColorPickerProps) {
-  const colors = motorcycle.colors ?? [];
+  const colors = useMemo(() => motorcycle.colors ?? [], [motorcycle.colors]);
   const activeColor = colors.find((color) => color.id === value) ?? colors[0];
   const previewImage = activeColor?.image ?? motorcycle.image;
   const activeLabel = activeColor?.name ?? 'Standard';
+
+  const activeIndex = useMemo(() => {
+    return colors.findIndex((c) => c.id === activeColor?.id);
+  }, [colors, activeColor?.id]);
+
+  // Build exact deterministic ImageKit URLs for all colorways
+  const colorUrls = useMemo(() => {
+    return colors.map((c) =>
+      getImageKitUrl(c.image, { width: 1100, quality: 88, format: 'auto' })
+    );
+  }, [colors]);
+
+  // Idle background prefetch of all color variants, prioritizing nearest neighbors
+  const { prefetchOnDemand } = useImagePrefetch(colorUrls, {
+    activeIndex: activeIndex >= 0 ? activeIndex : 0,
+    priority: 40,
+  });
 
   return (
     <div
@@ -87,13 +107,16 @@ export function MotorcycleColorPicker({
             aria-label={`Choose a colour for the ${motorcycle.name}`}
             className="mt-3 flex flex-wrap items-center gap-2.5"
           >
-            {colors.map((color) => {
+            {colors.map((color, idx) => {
               const isSelected = color.id === activeColor?.id;
               return (
                 <button
                   key={color.id}
                   type="button"
                   onClick={() => onChange(color.id)}
+                  onMouseEnter={() => prefetchOnDemand(colorUrls[idx])}
+                  onTouchStart={() => prefetchOnDemand(colorUrls[idx])}
+                  onFocus={() => prefetchOnDemand(colorUrls[idx])}
                   aria-pressed={isSelected}
                   aria-label={color.name}
                   title={color.name}

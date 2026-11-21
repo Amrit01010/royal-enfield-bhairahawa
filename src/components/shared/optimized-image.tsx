@@ -1,10 +1,15 @@
 // src/components/shared/optimized-image.tsx
 'use client';
 
-import { useCallback, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { getImageKitUrl, type ImageKitTransformation } from '@/lib/imagekit';
+import {
+  getImageKitUrl,
+  getIkLqipUrl,
+  type ImageKitTransformation,
+} from '@/lib/imagekit';
+import { prefetchEngine } from '@/lib/image-prefetch';
 
 export interface OptimizedImageProps {
   src?: string | null;
@@ -18,10 +23,11 @@ export interface OptimizedImageProps {
   containerClassName?: string;
   transformation?: ImageKitTransformation;
   fallbackText?: string;
+  showLqip?: boolean;
   onLoad?: () => void;
 }
 
-export function OptimizedImage({
+export const OptimizedImage = memo(function OptimizedImage({
   src,
   alt,
   width,
@@ -33,26 +39,42 @@ export function OptimizedImage({
   containerClassName,
   transformation,
   fallbackText,
+  showLqip = true,
   onLoad,
 }: OptimizedImageProps) {
-  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  // Derive deterministic transformed ImageKit URL
+  const optimizedSrc = useMemo(() => {
+    return src ? getImageKitUrl(src, transformation) : '';
+  }, [src, transformation]);
+
+  // Derive ultra-lightweight blurred placeholder URL (~500B)
+  const lqipSrc = useMemo(() => {
+    if (!src || !showLqip || src.endsWith('.svg')) return '';
+    return getIkLqipUrl(src);
+  }, [src, showLqip]);
+
+  // If already prefetched & decoded by our background engine, mark loaded immediately
+  const initialLoaded = useMemo(() => {
+    return Boolean(optimizedSrc && prefetchEngine.isPrefetched(optimizedSrc));
+  }, [optimizedSrc]);
+
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(initialLoaded ? optimizedSrc : null);
   const [errorSrc, setErrorSrc] = useState<string | null>(null);
 
-  // Derive transformed ImageKit URL
-  const optimizedSrc = src ? getImageKitUrl(src, transformation) : '';
   const hasError = Boolean(optimizedSrc) && errorSrc === optimizedSrc;
-  const isLoaded = Boolean(optimizedSrc) && loadedSrc === optimizedSrc;
+  const isLoaded = Boolean(optimizedSrc) && (loadedSrc === optimizedSrc || initialLoaded);
 
-  // Priority/preloaded images can finish before React attaches `onLoad`,
-  // which would otherwise leave the image permanently transparent.
+  // Handle immediate cached completion on mount
   const imageRef = useCallback(
     (node: HTMLImageElement | null) => {
-      if (!node?.complete || !optimizedSrc) return;
+      if (!node || !optimizedSrc) return;
 
-      if (node.naturalWidth > 0) {
-        setLoadedSrc(optimizedSrc);
-      } else {
-        setErrorSrc(optimizedSrc);
+      if (node.complete) {
+        if (node.naturalWidth > 0) {
+          setLoadedSrc(optimizedSrc);
+        } else {
+          setErrorSrc(optimizedSrc);
+        }
       }
     },
     [optimizedSrc]
@@ -82,19 +104,36 @@ export function OptimizedImage({
   return (
     <div
       className={cn(
-        'relative overflow-hidden',
+        'relative overflow-hidden select-none',
         fill ? 'absolute inset-0 w-full h-full' : '',
         containerClassName
       )}
     >
-      {/* Background placeholder during load */}
+      {/* 1. Base dark stage background */}
       <div
         className={cn(
-          'absolute inset-0 bg-[#161616] transition-opacity duration-700',
+          'absolute inset-0 bg-[#141414] transition-opacity duration-300',
           isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
         )}
       />
 
+      {/* 2. Low-Quality Blurred Image Placeholder (LQIP) */}
+      {lqipSrc && !isLoaded && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 overflow-hidden pointer-events-none"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={lqipSrc}
+            alt=""
+            className="w-full h-full object-cover filter blur-md scale-110 opacity-70 transition-opacity duration-300"
+            decoding="async"
+          />
+        </div>
+      )}
+
+      {/* 3. Main High-Resolution Image */}
       <Image
         ref={imageRef}
         src={optimizedSrc}
@@ -104,9 +143,12 @@ export function OptimizedImage({
         fill={fill}
         sizes={sizes || (fill ? '100vw' : undefined)}
         priority={priority}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'low'}
+        decoding={priority ? 'sync' : 'async'}
         className={cn(
-          'transition-all duration-700 ease-out',
-          isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]',
+          'transition-opacity duration-200 ease-out will-change-[opacity]',
+          isLoaded ? 'opacity-100' : 'opacity-0',
           className
         )}
         onLoad={() => {
@@ -119,4 +161,4 @@ export function OptimizedImage({
       />
     </div>
   );
-}
+});

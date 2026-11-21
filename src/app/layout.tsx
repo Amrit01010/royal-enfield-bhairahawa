@@ -45,6 +45,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://ik.imagekit.io" />
+      </head>
       <body
         className={cn(
           'min-h-screen bg-background font-sans text-foreground antialiased selection:bg-accent selection:text-white',

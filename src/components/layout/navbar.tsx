@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, ShoppingCart, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { navItems } from '@/lib/constants/motorcycles';
+import { navItems, getMotorcycle, getMotorcycleStudioColor } from '@/lib/constants/motorcycles';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { useCart } from '@/hooks/use-cart';
 import Image from 'next/image';
+import { getImageKitUrl } from '@/lib/imagekit';
+import { prefetchEngine } from '@/lib/image-prefetch';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,6 +20,20 @@ export function Navbar() {
 
   const { user, profile } = useAuth();
   const { itemCount, hydrated } = useCart();
+
+  const handleNavHover = (href: string) => {
+    if (href.startsWith('/models/')) {
+      const slug = href.replace('/models/', '');
+      const color = getMotorcycleStudioColor(slug);
+      const moto = getMotorcycle(slug);
+      const img = color?.image ?? moto?.image;
+      if (img) {
+        prefetchEngine.prefetchImmediate(
+          getImageKitUrl(img, { width: 1200, quality: 85, format: 'auto' })
+        );
+      }
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,6 +111,8 @@ export function Navbar() {
                       <Link
                         key={child.label}
                         href={child.href}
+                        onMouseEnter={() => handleNavHover(child.href)}
+                        onFocus={() => handleNavHover(child.href)}
                         className="block px-3 py-2 text-xs font-heading uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-secondary rounded-sm transition-colors"
                       >
                         {child.label}

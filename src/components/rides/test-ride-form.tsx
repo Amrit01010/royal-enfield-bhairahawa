@@ -25,6 +25,8 @@ import { TestRideTermsModal } from '@/components/rides/test-ride-terms-modal';
 import { MotorcycleColorPicker } from '@/components/rides/motorcycle-color-picker';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 import { cn } from '@/lib/utils';
+import { getImageKitUrl } from '@/lib/imagekit';
+import { prefetchEngine } from '@/lib/image-prefetch';
 
 function todayIsoDate(): string {
   const now = new Date();
@@ -228,6 +230,7 @@ export function TestRideForm({
                     alt={`${activeMotorcycle.name} in ${activeColor?.name ?? 'standard colour'}`}
                     fill
                     sizes="80px"
+                    transformation={{ width: 240, quality: 80, format: 'auto' }}
                     className="object-contain p-1"
                   />
                 </div>
@@ -245,11 +248,19 @@ export function TestRideForm({
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
                   {motorcycles.map((moto) => {
                     const isSelected = selectedMotoId === moto.id;
+                    const motoThumbSrc = moto.colors?.[0]?.image ?? moto.image;
                     return (
                       <button
                         key={moto.id}
                         type="button"
                         onClick={() => handleSelectMotorcycle(moto.id)}
+                        onMouseEnter={() => {
+                          if (motoThumbSrc) {
+                            prefetchEngine.prefetchImmediate(
+                              getImageKitUrl(motoThumbSrc, { width: 440, quality: 80, format: 'auto' })
+                            );
+                          }
+                        }}
                         className={cn(
                           'p-2.5 rounded-sm border text-left flex flex-col justify-between transition-all group relative',
                           isSelected
@@ -259,10 +270,11 @@ export function TestRideForm({
                       >
                         <div className="relative aspect-[16/10] w-full mb-1.5 bg-black/20 rounded-xs overflow-hidden">
                           <OptimizedImage
-                            src={moto.colors?.[0]?.image ?? moto.image}
+                            src={motoThumbSrc}
                             alt={moto.name}
                             fill
                             sizes="(max-width: 640px) 45vw, (max-width: 768px) 30vw, 220px"
+                            transformation={{ width: 440, quality: 80, format: 'auto' }}
                             className="object-contain p-1 group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>

@@ -17,6 +17,8 @@ import { cn } from '@/lib/utils';
 import { heroSlides, getMotorcycleStudioColor } from '@/lib/constants/motorcycles';
 import { Button } from '@/components/ui/button';
 import { OptimizedImage } from '@/components/shared/optimized-image';
+import { useImagePrefetch } from '@/hooks/use-image-prefetch';
+import { getImageKitUrl } from '@/lib/imagekit';
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -94,6 +96,28 @@ export function HeroSection() {
   const activeImage =
     viewMode === 'action' && slide.actionImage ? slide.actionImage : studioImage;
 
+  // Pre-generate deterministic URLs for both studio and action views of all hero slides
+  const slideUrls = heroSlides.map((s) => {
+    const sColor = getMotorcycleStudioColor(s.id);
+    const sImg = sColor?.image ?? s.image;
+    return getImageKitUrl(sImg, { width: 1400, quality: 88, format: 'auto' });
+  });
+
+  const { prefetchOnDemand } = useImagePrefetch(slideUrls, {
+    activeIndex: currentSlide,
+    priority: 50,
+  });
+
+  // Also prefetch the active slide's alternate view (action view if studio, studio if action)
+  useEffect(() => {
+    const altSrc = viewMode === 'studio' ? slide.actionImage : studioImage;
+    if (altSrc) {
+      prefetchOnDemand(
+        getImageKitUrl(altSrc, { width: 1400, quality: 88, format: 'auto' })
+      );
+    }
+  }, [currentSlide, viewMode, slide.actionImage, studioImage, prefetchOnDemand]);
+
   return (
     <section
       className="relative min-h-[92vh] lg:min-h-screen w-full overflow-hidden bg-[#0A0A0A] flex flex-col justify-between pt-20 lg:pt-24 select-none"
@@ -109,15 +133,19 @@ export function HeroSection() {
       {/* 1. ATMOSPHERIC BACKDROP LAYER (Subtle ambient landscape & mechanical grid) */}
       {/* ========================================================================= */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Ambient landscape backdrop (darkened & softened so it provides cinematic mood) */}
+        {/* Ambient landscape backdrop (mount current & adjacent next only to eliminate network congestion) */}
         {heroSlides.map((s, index) => {
+          const isCurrent = index === currentSlide;
+          const isNext = index === (currentSlide + 1) % heroSlides.length;
+          if (!isCurrent && !isNext) return null;
+
           const bgSrc = s.actionImage || s.image;
           return (
             <div
               key={`bg-${s.id}`}
               className={cn(
                 'absolute inset-0 transition-opacity duration-1000 ease-in-out',
-                index === currentSlide ? 'opacity-20 z-1' : 'opacity-0 z-0'
+                isCurrent ? 'opacity-20 z-1' : 'opacity-0 z-0'
               )}
             >
               {bgSrc && (
@@ -327,6 +355,8 @@ export function HeroSection() {
                   <button
                     type="button"
                     onClick={() => setViewMode('studio')}
+                    onMouseEnter={() => prefetchOnDemand(getImageKitUrl(studioImage, { width: 1400, quality: 88, format: 'auto' }))}
+                    onFocus={() => prefetchOnDemand(getImageKitUrl(studioImage, { width: 1400, quality: 88, format: 'auto' }))}
                     className={cn(
                       'flex items-center gap-1 px-2.5 py-1 rounded-[2px] font-heading text-[10px] uppercase tracking-wider transition-all',
                       viewMode === 'studio'
@@ -341,6 +371,8 @@ export function HeroSection() {
                   <button
                     type="button"
                     onClick={() => setViewMode('action')}
+                    onMouseEnter={() => slide.actionImage && prefetchOnDemand(getImageKitUrl(slide.actionImage, { width: 1400, quality: 88, format: 'auto' }))}
+                    onFocus={() => slide.actionImage && prefetchOnDemand(getImageKitUrl(slide.actionImage, { width: 1400, quality: 88, format: 'auto' }))}
                     className={cn(
                       'flex items-center gap-1 px-2.5 py-1 rounded-[2px] font-heading text-[10px] uppercase tracking-wider transition-all',
                       viewMode === 'action'
@@ -459,6 +491,9 @@ export function HeroSection() {
                   <button
                     key={s.id}
                     onClick={() => goToSlide(index)}
+                    onMouseEnter={() => prefetchOnDemand(slideUrls[index])}
+                    onTouchStart={() => prefetchOnDemand(slideUrls[index])}
+                    onFocus={() => prefetchOnDemand(slideUrls[index])}
                     className={cn(
                       'relative flex flex-col items-start px-3.5 py-1.5 rounded-sm transition-all group font-heading uppercase shrink-0 border',
                       isActive
@@ -526,6 +561,8 @@ export function HeroSection() {
                   variant="outline"
                   size="icon"
                   onClick={prevSlide}
+                  onMouseEnter={() => prefetchOnDemand(slideUrls[(currentSlide - 1 + heroSlides.length) % heroSlides.length])}
+                  onTouchStart={() => prefetchOnDemand(slideUrls[(currentSlide - 1 + heroSlides.length) % heroSlides.length])}
                   className="border-border bg-secondary hover:border-accent hover:bg-accent/10 text-white h-8 w-8 rounded-sm transition-all"
                   aria-label="Previous motorcycle"
                 >
@@ -535,6 +572,8 @@ export function HeroSection() {
                   variant="outline"
                   size="icon"
                   onClick={nextSlide}
+                  onMouseEnter={() => prefetchOnDemand(slideUrls[(currentSlide + 1) % heroSlides.length])}
+                  onTouchStart={() => prefetchOnDemand(slideUrls[(currentSlide + 1) % heroSlides.length])}
                   className="border-border bg-secondary hover:border-accent hover:bg-accent/10 text-white h-8 w-8 rounded-sm transition-all"
                   aria-label="Next motorcycle"
                 >

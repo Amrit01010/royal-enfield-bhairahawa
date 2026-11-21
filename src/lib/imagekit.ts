@@ -1,7 +1,7 @@
 // src/lib/imagekit.ts
 
 export const IMAGEKIT_URL_ENDPOINT =
-  process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT?.replace(/\/$/, '') || '';
+  process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT?.replace(/\/$/, '') || 'https://ik.imagekit.io/edzbgdhorz';
 
 export const IMAGEKIT_PRIVATE_KEY =
   process.env.IMAGEKIT_PRIVATE_KEY || '';
@@ -15,6 +15,7 @@ export interface ImageKitTransformation {
   focus?: 'center' | 'top' | 'bottom' | 'left' | 'right' | 'auto';
   blur?: number;
   progressive?: boolean;
+  dpr?: number;
 }
 
 export type ImageKitFile = {
@@ -31,29 +32,53 @@ export type ImageKitFile = {
 };
 
 /**
- * Builds an ImageKit transformation string from options
- * e.g., "w-800,q-80,f-auto,pr-true"
+ * Builds an ImageKit transformation string with strict, deterministic parameter ordering.
+ * Parameter ordering is strictly standardized so prefetch URLs and render URLs match
+ * 100% byte-for-byte in browser HTTP cache.
+ * e.g. "w-800,q-80,f-auto,dpr-2,pr-true"
  */
 export function buildTransformationString(options?: ImageKitTransformation): string {
   if (!options) return '';
 
   const tr: string[] = [];
 
-  if (options.width) tr.push(`w-${options.width}`);
-  if (options.height) tr.push(`h-${options.height}`);
+  // Consistent deterministic ordering:
+  // 1. Dimensions (w, h)
+  if (options.width && options.width > 0) tr.push(`w-${Math.round(options.width)}`);
+  if (options.height && options.height > 0) tr.push(`h-${Math.round(options.height)}`);
+
+  // 2. DPR: Cap DPR at 2 (dpr-2 max) as 3x adds massive byte weight with negligible visual gain
+  if (options.dpr) {
+    const cappedDpr = Math.min(Math.max(options.dpr, 1), 2);
+    tr.push(`dpr-${cappedDpr}`);
+  }
+
+  // 3. Quality: default to q-80 if quality passed
   if (options.quality) tr.push(`q-${options.quality}`);
-  if (options.format) tr.push(`f-${options.format}`);
+
+  // 4. Format: auto converts to AVIF/WebP based on browser support
+  if (options.format) {
+    tr.push(`f-${options.format}`);
+  } else {
+    tr.push('f-auto');
+  }
+
+  // 5. Crop & Focus
   if (options.cropMode) tr.push(`cm-${options.cropMode}`);
   if (options.focus) tr.push(`fo-${options.focus}`);
+
+  // 6. Blur effects (used for LQIP)
   if (options.blur) tr.push(`bl-${options.blur}`);
+
+  // 7. Progressive loading
   if (options.progressive) tr.push('pr-true');
 
   return tr.join(',');
 }
 
 /**
- * Generates an optimized ImageKit URL from a relative path or full URL.
- * Automatically respects NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT.
+ * Generates an optimized, deterministic ImageKit URL from a relative path or full URL.
+ * Standardizes parameter ordering, encoding, and host handling.
  */
 export function getImageKitUrl(
   src: string | undefined | null,
@@ -61,36 +86,96 @@ export function getImageKitUrl(
 ): string {
   if (!src) return '';
 
+  // Local static SVGs or non-ImageKit public assets
+  if (src.endsWith('.svg') || src.startsWith('/favicon') || src === '/logo.svg') {
+    return src;
+  }
+
   const trString = buildTransformationString(transformation);
 
   // If already a full URL
   if (src.startsWith('http://') || src.startsWith('https://')) {
-    // If it's an ImageKit URL, append/update transformation parameter
     if (src.includes('ik.imagekit.io')) {
-      if (!trString) return src;
       const url = new URL(src);
-      url.searchParams.set('tr', trString);
+      if (trString) {
+        url.searchParams.set('tr', trString);
+      }
       return url.toString();
     }
     return src;
   }
 
-  // Relative path - normalize and encode special characters/spaces safely
+  // Relative path - normalize and encode path segments consistently
   const cleanPath = src.startsWith('/') ? src : `/${src}`;
   const encodedPath = cleanPath
     .split('/')
     .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
     .join('/');
 
-  // If endpoint is configured and not default dummy
-  if (IMAGEKIT_URL_ENDPOINT && !IMAGEKIT_URL_ENDPOINT.includes('your_imagekit_id')) {
-    const baseUrl = `${IMAGEKIT_URL_ENDPOINT}${encodedPath}`;
-    if (!trString) return baseUrl;
-    return `${baseUrl}?tr=${encodeURIComponent(trString)}`;
+  const endpoint = IMAGEKIT_URL_ENDPOINT || 'https://ik.imagekit.io/edzbgdhorz';
+  const baseUrl = `${endpoint}${encodedPath}`;
+
+  if (!trString) return baseUrl;
+  return `${baseUrl}?tr=${trString}`;
+}
+
+/**
+ * Alias for getImageKitUrl
+ */
+export const getIkUrl = getImageKitUrl;
+
+/**
+ * Generates a Low-Quality Image Placeholder (LQIP) URL.
+ * Generates a tiny 20px blurred thumbnail (~500 bytes - 1KB) for instant initial render.
+ */
+export function getIkLqipUrl(src: string | undefined | null): string {
+  if (!src) return '';
+  return getImageKitUrl(src, {
+    width: 20,
+    blur: 6,
+    quality: 20,
+    format: 'auto',
+  });
+}
+
+/**
+ * Generates a responsive srcset string with consistent ImageKit transformations.
+ */
+export function getIkSrcSet(
+  src: string | undefined | null,
+  widths: number[] = [320, 480, 640, 768, 1024, 1280, 1600, 1920],
+  baseTransformation?: Omit<ImageKitTransformation, 'width'>
+): string {
+  if (!src) return '';
+  return widths
+    .map((w) => `${getImageKitUrl(src, { ...baseTransformation, width: w })} ${w}w`)
+    .join(', ');
+}
+
+/**
+ * Network awareness profile to adjust image quality dynamically based on client connection.
+ */
+export function getClientNetworkProfile(): {
+  saveData: boolean;
+  effectiveType: 'slow-2g' | '2g' | '3g' | '4g' | 'unknown';
+  isSlowConnection: boolean;
+} {
+  if (typeof navigator === 'undefined') {
+    return { saveData: false, effectiveType: 'unknown', isSlowConnection: false };
   }
 
-  // Fallback to local / public path
-  return encodedPath;
+  const conn = (navigator as unknown as {
+    connection?: {
+      saveData?: boolean;
+      effectiveType?: 'slow-2g' | '2g' | '3g' | '4g';
+    };
+  }).connection;
+
+  const saveData = Boolean(conn?.saveData);
+  const effectiveType = conn?.effectiveType || 'unknown';
+  const isSlowConnection = saveData || effectiveType === 'slow-2g' || effectiveType === '2g' || effectiveType === '3g';
+
+  return { saveData, effectiveType, isSlowConnection };
 }
 
 /**

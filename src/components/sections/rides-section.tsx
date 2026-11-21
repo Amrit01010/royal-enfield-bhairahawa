@@ -25,6 +25,9 @@ import { OptimizedImage } from '@/components/shared/optimized-image';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { buildRideExpeditionWhatsAppMessage, buildWhatsAppUrl } from '@/lib/whatsapp';
 import { RideDossierModal } from '@/components/rides/ride-dossier-modal';
+import { getImageKitUrl } from '@/lib/imagekit';
+import { prefetchEngine } from '@/lib/image-prefetch';
+import { useImagePrefetch } from '@/hooks/use-image-prefetch';
 
 const difficultyColors: Record<string, string> = {
   Easy: 'bg-emerald-950/80 text-emerald-400 border-emerald-800',
@@ -128,6 +131,37 @@ export function RidesSection() {
     setSearchQuery('');
   };
 
+  // Pre-generate deterministic card image URLs for all rides
+  const rideCardUrls = useMemo(() => {
+    return rides.map((r) =>
+      getImageKitUrl(r.image, { width: 900, quality: 78, format: 'auto' })
+    );
+  }, []);
+
+  // Idle background prefetch of ride card thumbnails
+  useImagePrefetch(rideCardUrls, { priority: 20 });
+
+  const handleCategoryHover = (catValue: FilterCategory) => {
+    const targetRides = catValue === 'ALL' ? rides : rides.filter((r) => r.category === catValue);
+    targetRides.slice(0, 3).forEach((r) => {
+      prefetchEngine.prefetchImmediate(
+        getImageKitUrl(r.image, { width: 900, quality: 78, format: 'auto' })
+      );
+    });
+  };
+
+  const handleRideHover = (ride: Ride) => {
+    // Prefetch high-res modal banner so modal opens with 0ms visual delay
+    prefetchEngine.prefetchImmediate(
+      getImageKitUrl(ride.image, { width: 1400, quality: 78, format: 'auto' })
+    );
+    if (ride.gallery?.[0]?.src) {
+      prefetchEngine.prefetchImmediate(
+        getImageKitUrl(ride.gallery[0].src, { width: 900, quality: 78, format: 'auto' })
+      );
+    }
+  };
+
   return (
     <section className="relative py-16 lg:py-24 bg-[#090909] border-t border-border/70">
       {/* Background Subtle Grid Texture */}
@@ -186,6 +220,8 @@ export function RidesSection() {
                 key={cat.value}
                 type="button"
                 onClick={() => setSelectedCategory(cat.value)}
+                onMouseEnter={() => handleCategoryHover(cat.value)}
+                onFocus={() => handleCategoryHover(cat.value)}
                 aria-pressed={isActive}
                 className={cn(
                   'px-3.5 py-2 text-xs font-heading uppercase tracking-wider font-semibold rounded-sm whitespace-nowrap transition-all border shrink-0 cursor-pointer',
@@ -300,6 +336,8 @@ export function RidesSection() {
             {filteredRides.map((ride, index) => (
               <Card
                 key={ride.id}
+                onMouseEnter={() => handleRideHover(ride)}
+                onFocusCapture={() => handleRideHover(ride)}
                 className="group relative bg-[#121212] border border-border hover:border-accent/70 transition-all duration-300 rounded-sm overflow-hidden flex flex-col justify-between hover:shadow-xl hover:shadow-black/50"
               >
                 <div>
