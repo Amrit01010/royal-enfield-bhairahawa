@@ -1,7 +1,7 @@
 // src/components/shared/optimized-image.tsx
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { getImageKitUrl, type ImageKitTransformation } from '@/lib/imagekit';
@@ -35,11 +35,28 @@ export function OptimizedImage({
   fallbackText,
   onLoad,
 }: OptimizedImageProps) {
-  const [hasError, setHasError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const [errorSrc, setErrorSrc] = useState<string | null>(null);
 
   // Derive transformed ImageKit URL
   const optimizedSrc = src ? getImageKitUrl(src, transformation) : '';
+  const hasError = Boolean(optimizedSrc) && errorSrc === optimizedSrc;
+  const isLoaded = Boolean(optimizedSrc) && loadedSrc === optimizedSrc;
+
+  // Priority/preloaded images can finish before React attaches `onLoad`,
+  // which would otherwise leave the image permanently transparent.
+  const imageRef = useCallback(
+    (node: HTMLImageElement | null) => {
+      if (!node?.complete || !optimizedSrc) return;
+
+      if (node.naturalWidth > 0) {
+        setLoadedSrc(optimizedSrc);
+      } else {
+        setErrorSrc(optimizedSrc);
+      }
+    },
+    [optimizedSrc]
+  );
 
   const isConfigured = Boolean(optimizedSrc && !hasError);
 
@@ -79,6 +96,7 @@ export function OptimizedImage({
       />
 
       <Image
+        ref={imageRef}
         src={optimizedSrc}
         alt={alt}
         width={!fill ? width : undefined}
@@ -92,11 +110,11 @@ export function OptimizedImage({
           className
         )}
         onLoad={() => {
-          setIsLoaded(true);
+          setLoadedSrc(optimizedSrc);
           onLoad?.();
         }}
         onError={() => {
-          setHasError(true);
+          setErrorSrc(optimizedSrc);
         }}
       />
     </div>

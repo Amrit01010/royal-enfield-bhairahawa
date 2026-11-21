@@ -38,6 +38,14 @@ export type RideCategory =
 
 export type RideDifficulty = 'Easy' | 'Moderate' | 'Challenging' | 'Extreme';
 
+/** Supporting photograph shown in the expedition gallery. */
+export interface RideImage {
+  /** ImageKit path (or full URL) resolved through `getImageKitUrl`. */
+  src: string;
+  alt: string;
+  credit?: string;
+}
+
 export interface Ride {
   id: string;
   name: string;
@@ -45,7 +53,11 @@ export interface Ride {
   category: RideCategory;
   description: string;
   fullDescription?: string;
+  /** ImageKit path for the primary card/hero photograph. */
   image: string;
+  imageAlt?: string;
+  imageCredit?: string;
+  gallery?: RideImage[];
   duration: string;
   distance?: string;
   difficulty: RideDifficulty;

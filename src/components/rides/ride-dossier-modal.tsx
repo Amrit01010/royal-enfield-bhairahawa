@@ -80,10 +80,11 @@ export function RideDossierModal({ ride, isOpen, onClose }: RideDossierModalProp
         <div className="relative aspect-[21/9] sm:aspect-[2.4/1] w-full shrink-0 overflow-hidden bg-[#181818] border-b border-border">
           <OptimizedImage
             src={ride.image}
-            alt={ride.name}
+            alt={ride.imageAlt || ride.name}
             fill
             sizes="(max-width: 1024px) 100vw, 900px"
-            className="object-cover"
+            transformation={{ width: 1400, quality: 78, format: 'auto' }}
+            className="object-cover object-center"
             fallbackText={ride.name}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-black/40 to-transparent" />

@@ -4,6 +4,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
+  Calendar,
   Clock,
   Compass,
   Mountain,
@@ -12,9 +13,10 @@ import {
   SlidersHorizontal,
   ChevronRight,
   Info,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { rides } from '@/lib/constants/motorcycles';
+import { rides } from '@/lib/constants/rides';
 import { Ride, RideCategory } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -47,9 +49,9 @@ export function RidesSection() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeModalRide, setActiveModalRide] = useState<Ride | null>(null);
 
-  const categories: { label: string; value: FilterCategory; count: number }[] = useMemo(() => {
-    return [
-      { label: 'All Expeditions', value: 'ALL', count: rides.length },
+  const categories = useMemo(() => {
+    const allCategories: { label: string; value: FilterCategory; count: number }[] = [
+      { label: 'All Rides', value: 'ALL', count: rides.length },
       {
         label: 'Marquee Flagships',
         value: 'Marquee',
@@ -76,6 +78,8 @@ export function RidesSection() {
         count: rides.filter((r) => r.category === 'Training').length,
       },
     ];
+
+    return allCategories.filter((c) => c.value === 'ALL' || c.count > 0);
   }, []);
 
   const filteredRides = useMemo(() => {
@@ -102,6 +106,28 @@ export function RidesSection() {
     });
   }, [selectedCategory, selectedDifficulty, searchQuery]);
 
+  const hasActiveFilters =
+    selectedCategory !== 'ALL' || selectedDifficulty !== 'ALL' || searchQuery.trim().length > 0;
+
+  const photoCredits = useMemo(() => {
+    const credits = new Set<string>();
+
+    rides.forEach((ride) => {
+      if (ride.imageCredit) credits.add(ride.imageCredit);
+      ride.gallery?.forEach((photo) => {
+        if (photo.credit) credits.add(photo.credit);
+      });
+    });
+
+    return Array.from(credits);
+  }, []);
+
+  const resetFilters = () => {
+    setSelectedCategory('ALL');
+    setSelectedDifficulty('ALL');
+    setSearchQuery('');
+  };
+
   return (
     <section className="relative py-16 lg:py-24 bg-[#090909] border-t border-border/70">
       {/* Background Subtle Grid Texture */}
@@ -109,9 +135,9 @@ export function RidesSection() {
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <SectionHeading
-          label="Official Royal Enfield Calendar"
-          title="The OG Rides & Expeditions"
-          description="Explore the legendary marquee expeditions, Himalayan conquests, discovery tours, and global gatherings straight from the official Royal Enfield brotherhood. Book through our Bhairahawa showroom."
+          label="Bhairahawa Ride Calendar"
+          title="Pick Your Line Through Nepal"
+          description="From a sunrise run to Lumbini to the walled city of Lo Manthang — filter by terrain, difficulty, or destination, then open the full briefing."
           align="center"
         />
 
@@ -119,26 +145,26 @@ export function RidesSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto mt-8 mb-12 p-3 sm:p-4 bg-[#121212] border border-border/70 rounded-sm">
           <div className="text-center p-2 border-r border-border/50 last:border-r-0">
             <span className="font-heading text-xl sm:text-2xl font-black text-white tracking-wider block">
-              12
+              {rides.length}
             </span>
             <span className="text-[10px] sm:text-xs font-heading uppercase tracking-widest text-zinc-400">
-              Official Circuits
+              Curated Rides
             </span>
           </div>
           <div className="text-center p-2 border-r border-border/50 md:border-r last:border-r-0">
             <span className="font-heading text-xl sm:text-2xl font-black text-accent tracking-wider block">
-              18,380 FT
+              12,600 FT
             </span>
             <span className="text-[10px] sm:text-xs font-heading uppercase tracking-widest text-zinc-400">
-              Khardung La Peak
+              Lo Manthang
             </span>
           </div>
           <div className="text-center p-2 border-r border-border/50 last:border-r-0">
             <span className="font-heading text-xl sm:text-2xl font-black text-white tracking-wider block">
-              60+
+              1
             </span>
             <span className="text-[10px] sm:text-xs font-heading uppercase tracking-widest text-zinc-400">
-              Countries One Ride
+              Showroom Gateway
             </span>
           </div>
           <div className="text-center p-2">
@@ -158,7 +184,9 @@ export function RidesSection() {
             return (
               <button
                 key={cat.value}
+                type="button"
                 onClick={() => setSelectedCategory(cat.value)}
+                aria-pressed={isActive}
                 className={cn(
                   'px-3.5 py-2 text-xs font-heading uppercase tracking-wider font-semibold rounded-sm whitespace-nowrap transition-all border shrink-0 cursor-pointer',
                   isActive
@@ -181,26 +209,44 @@ export function RidesSection() {
         </div>
 
         {/* Search & Filter Controls Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-8 bg-[#121212] p-3 border border-border/70 rounded-sm">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4 bg-[#121212] p-3 border border-border/70 rounded-sm">
           {/* Search box */}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <label htmlFor="ride-search" className="sr-only">
+              Search expeditions
+            </label>
+            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
-              type="text"
+              id="ride-search"
+              type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by expedition name, terrain, or route (e.g. Mustang, Zanskar, Bhutan)..."
-              className="w-full bg-[#181818] border border-border/80 text-white placeholder-zinc-500 text-xs pl-9 pr-3 py-2 rounded-sm focus:outline-none focus:border-accent transition-colors"
+              placeholder="Search by expedition name, terrain, or route (e.g. Mustang, Lumbini, Pokhara)..."
+              className="w-full bg-[#181818] border border-border/80 text-white placeholder-zinc-500 text-xs pl-9 pr-9 py-2 rounded-sm focus:outline-none focus:border-accent transition-colors [&::-webkit-search-cancel-button]:hidden"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-zinc-500 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           {/* Difficulty Dropdown Filter */}
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-            <span className="text-[11px] font-heading uppercase tracking-wider text-zinc-400 whitespace-nowrap">
+            <label
+              htmlFor="ride-difficulty"
+              className="text-[11px] font-heading uppercase tracking-wider text-zinc-400 whitespace-nowrap"
+            >
               Difficulty:
-            </span>
+            </label>
             <select
+              id="ride-difficulty"
               value={selectedDifficulty}
               onChange={(e) => setSelectedDifficulty(e.target.value)}
               className="bg-[#181818] border border-border/80 text-white text-xs px-2.5 py-2 rounded-sm focus:outline-none focus:border-accent cursor-pointer"
@@ -214,6 +260,24 @@ export function RidesSection() {
           </div>
         </div>
 
+        {/* Result summary */}
+        <div className="flex items-center justify-between gap-3 mb-6">
+          <p aria-live="polite" className="text-[11px] font-heading uppercase tracking-widest text-zinc-500">
+            Showing <span className="text-zinc-200">{filteredRides.length}</span> of{' '}
+            <span className="text-zinc-200">{rides.length}</span> expeditions
+          </p>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="inline-flex items-center gap-1 text-[11px] font-heading uppercase tracking-wider text-zinc-400 hover:text-accent transition-colors cursor-pointer"
+            >
+              <X className="w-3 h-3" />
+              Clear filters
+            </button>
+          )}
+        </div>
+
         {/* Expeditions Grid */}
         {filteredRides.length === 0 ? (
           <div className="text-center py-16 bg-[#121212] border border-border/60 rounded-sm p-8">
@@ -224,11 +288,8 @@ export function RidesSection() {
               Try adjusting your category selection, difficulty level, or search terms.
             </p>
             <button
-              onClick={() => {
-                setSelectedCategory('ALL');
-                setSelectedDifficulty('ALL');
-                setSearchQuery('');
-              }}
+              type="button"
+              onClick={resetFilters}
               className="px-4 py-2 bg-secondary text-white text-xs font-heading uppercase tracking-wider hover:bg-accent rounded-sm transition-colors cursor-pointer"
             >
               Reset Filters
@@ -236,25 +297,31 @@ export function RidesSection() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredRides.map((ride) => (
+            {filteredRides.map((ride, index) => (
               <Card
                 key={ride.id}
                 className="group relative bg-[#121212] border border-border hover:border-accent/70 transition-all duration-300 rounded-sm overflow-hidden flex flex-col justify-between hover:shadow-xl hover:shadow-black/50"
               >
                 <div>
                   {/* Visual Image Block */}
-                  <div className="relative aspect-[16/10] overflow-hidden bg-[#161616] border-b border-border/60">
+                  <Link
+                    href={ride.href}
+                    aria-label={`Open the ${ride.name} expedition briefing`}
+                    className="relative block aspect-[16/10] overflow-hidden bg-[#161616] border-b border-border/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                  >
                     <OptimizedImage
                       src={ride.image}
-                      alt={ride.name}
+                      alt={ride.imageAlt || ride.name}
                       fill
+                      priority={index < 3}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      transformation={{ width: 900, quality: 78, format: 'auto' }}
+                      className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                       fallbackText={ride.name}
                     />
 
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/30 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/40 pointer-events-none" />
 
                     {/* Category Badge */}
                     <Badge
@@ -278,14 +345,22 @@ export function RidesSection() {
                       </Badge>
                     )}
 
-                    {/* Bottom Elevation / Season Pill on Image */}
+                    {/* Elevation Pill on Image */}
                     {ride.elevation && (
                       <div className="absolute bottom-2.5 right-3 px-2 py-0.5 bg-black/80 backdrop-blur-sm border border-white/10 rounded-sm z-10 flex items-center gap-1 text-[10px] font-heading uppercase tracking-wider text-zinc-300">
                         <Mountain className="w-3 h-3 text-accent" />
                         {ride.elevation}
                       </div>
                     )}
-                  </div>
+
+                    {/* Hover cue */}
+                    <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-center gap-1 bg-gradient-to-t from-black/80 to-transparent pt-8 pb-2.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="text-[10px] font-heading uppercase tracking-[0.2em] text-white">
+                        View briefing
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-accent" />
+                    </div>
+                  </Link>
 
                   <CardContent className="p-5">
                     {/* Tagline */}
@@ -296,8 +371,13 @@ export function RidesSection() {
                     )}
 
                     {/* Title */}
-                    <h3 className="font-heading text-xl font-bold uppercase text-white mb-2 group-hover:text-accent transition-colors tracking-wide">
-                      {ride.name}
+                    <h3 className="font-heading text-xl font-bold uppercase text-white mb-2 tracking-wide">
+                      <Link
+                        href={ride.href}
+                        className="transition-colors group-hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                      >
+                        {ride.name}
+                      </Link>
                     </h3>
 
                     {/* Description */}
@@ -330,18 +410,27 @@ export function RidesSection() {
                           {ride.distance}
                         </span>
                       )}
+
                     </div>
+
+                    {/* Season */}
+                    {ride.season && (
+                      <p className="mt-3 flex items-center gap-1.5 text-[11px] text-zinc-500">
+                        <Calendar className="w-3 h-3 text-accent shrink-0" />
+                        <span className="line-clamp-1">{ride.season}</span>
+                      </p>
+                    )}
                   </CardContent>
                 </div>
 
                 {/* Card Action Footer */}
-                <div className="px-5 pb-5 pt-3 border-t border-border/50 mt-auto flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5">
+                <div className="px-5 pb-5 pt-3 border-t border-border/50 mt-auto space-y-2">
+                  <div className="flex items-center gap-2">
                     <a
                       href={buildWhatsAppUrl(buildRideExpeditionWhatsAppMessage(ride))}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider px-3 py-2 bg-[#25D366] hover:bg-[#20ba5a] text-black rounded-sm transition-colors shadow-sm"
+                      className="inline-flex flex-1 items-center justify-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider px-3 py-2 bg-[#25D366] hover:bg-[#20ba5a] text-black rounded-sm transition-colors shadow-sm"
                     >
                       <WhatsAppIcon className="w-3.5 h-3.5 text-black" />
                       Book on WhatsApp
@@ -350,7 +439,8 @@ export function RidesSection() {
                     <button
                       type="button"
                       onClick={() => setActiveModalRide(ride)}
-                      className="inline-flex items-center gap-1 text-xs font-heading font-bold uppercase tracking-wider px-2.5 py-2 bg-secondary hover:bg-zinc-800 text-zinc-300 hover:text-white border border-border rounded-sm transition-colors cursor-pointer"
+                      aria-haspopup="dialog"
+                      className="inline-flex items-center justify-center gap-1 text-xs font-heading font-bold uppercase tracking-wider px-3 py-2 bg-secondary hover:bg-zinc-800 text-zinc-300 hover:text-white border border-border rounded-sm transition-colors cursor-pointer"
                       title="View Expedition Dossier"
                     >
                       <Info className="w-3.5 h-3.5 text-accent" />
@@ -360,9 +450,9 @@ export function RidesSection() {
 
                   <Link
                     href={ride.href}
-                    className="inline-flex items-center gap-0.5 text-xs font-heading font-bold uppercase tracking-wider text-zinc-400 hover:text-accent transition-colors group/link shrink-0"
+                    className="group/link flex w-full items-center justify-between gap-2 border border-border/70 px-3 py-2 text-xs font-heading font-bold uppercase tracking-wider text-zinc-400 transition-colors hover:border-accent/60 hover:text-accent"
                   >
-                    Briefing
+                    Full expedition briefing
                     <ChevronRight className="w-3.5 h-3.5 text-accent transition-transform group-hover/link:translate-x-0.5" />
                   </Link>
                 </div>
@@ -370,6 +460,26 @@ export function RidesSection() {
             ))}
           </div>
         )}
+
+        {/* Photography attribution */}
+        <details className="group/credits mt-10 border-t border-border/60 pt-4">
+          <summary className="flex cursor-pointer list-none items-center gap-2 text-[10px] font-heading uppercase tracking-[0.18em] text-zinc-500 transition-colors hover:text-zinc-300 [&::-webkit-details-marker]:hidden">
+            <span className="h-1 w-1 bg-accent" />
+            Photography credits
+            <ChevronRight className="h-3 w-3 transition-transform group-open/credits:rotate-90" />
+          </summary>
+          <ul className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1.5 sm:grid-cols-2">
+            {photoCredits.map((credit) => (
+              <li key={credit} className="text-[10px] leading-relaxed text-zinc-600">
+                {credit}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-[10px] leading-relaxed text-zinc-600">
+            Ride photography sourced from Wikimedia Commons under the credited Creative Commons
+            licences. Additional credits appear on each expedition page.
+          </p>
+        </details>
       </div>
 
       {/* Interactive Expedition Dossier Modal */}

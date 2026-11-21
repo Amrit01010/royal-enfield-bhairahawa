@@ -12,6 +12,7 @@ import {
   Wrench,
   Shield,
   ArrowLeft,
+  ChevronRight,
   PhoneCall,
 } from 'lucide-react';
 import { rides } from '@/lib/constants/rides';
@@ -19,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { buildRideExpeditionWhatsAppMessage, buildWhatsAppUrl } from '@/lib/whatsapp';
+import { getImageKitUrl } from '@/lib/imagekit';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 
@@ -44,13 +46,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const socialImage = getImageKitUrl(ride.image, {
+    width: 1200,
+    height: 630,
+    cropMode: 'crop',
+    focus: 'auto',
+    quality: 80,
+    format: 'auto',
+  });
+
   return {
     title: `${ride.name} — Official Expedition | Royal Enfield Bhairahawa`,
     description: ride.description,
     openGraph: {
       title: `${ride.name} | Royal Enfield Expeditions`,
       description: ride.description,
-      images: [ride.image],
+      images: [
+        {
+          url: socialImage,
+          width: 1200,
+          height: 630,
+          alt: ride.imageAlt || ride.name,
+        },
+      ],
     },
   };
 }
@@ -79,6 +97,7 @@ export default async function RideDetailPage({ params }: PageProps) {
   }
 
   const whatsappUrl = buildWhatsAppUrl(buildRideExpeditionWhatsAppMessage(ride));
+  const relatedRides = rides.filter((r) => r.id !== ride.id).slice(0, 3);
 
   return (
     <div className="pt-20 bg-[#090909] min-h-screen text-foreground">
@@ -103,14 +122,21 @@ export default async function RideDetailPage({ params }: PageProps) {
       <section className="relative w-full aspect-[21/9] min-h-[360px] md:min-h-[460px] bg-[#141414] border-b border-border/80 overflow-hidden">
         <OptimizedImage
           src={ride.image}
-          alt={ride.name}
+          alt={ride.imageAlt || ride.name}
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          transformation={{ width: 1920, quality: 82, format: 'auto' }}
+          className="object-cover object-center"
           fallbackText={ride.name}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#090909] via-black/50 to-black/30" />
+
+        {ride.imageCredit && (
+          <span className="absolute top-4 right-4 z-10 rounded-sm border border-white/10 bg-black/50 px-2 py-1 text-[9px] leading-none text-white/50 backdrop-blur-sm">
+            {ride.imageCredit}
+          </span>
+        )}
 
         <div className="container mx-auto px-4 lg:px-8 absolute inset-0 flex flex-col justify-end pb-8 md:pb-12 z-10">
           <div className="max-w-3xl">
@@ -287,6 +313,51 @@ export default async function RideDetailPage({ params }: PageProps) {
               </div>
             )}
 
+            {/* Route Gallery */}
+            {ride.gallery && ride.gallery.length > 0 && (
+              <div className="p-6 bg-[#121212] border border-border/80 rounded-sm">
+                <h2 className="font-heading text-base font-bold uppercase text-white tracking-wider mb-1 flex items-center gap-2">
+                  <span className="w-1.5 h-4 bg-accent" />
+                  On the Route
+                </h2>
+                <p className="text-[11px] text-zinc-500 mb-4">
+                  Landmarks and road conditions you will meet along this expedition.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {ride.gallery.map((photo) => (
+                    <figure
+                      key={photo.src}
+                      className="group relative overflow-hidden rounded-sm border border-border/60 bg-black/40"
+                    >
+                      <div className="relative aspect-[4/3]">
+                        <OptimizedImage
+                          src={photo.src}
+                          alt={photo.alt}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          transformation={{ width: 900, quality: 78, format: 'auto' }}
+                          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                          fallbackText={ride.name}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                        {photo.credit && (
+                          <figcaption className="absolute bottom-0 left-0 right-0 p-2.5 text-[9px] leading-snug text-zinc-400">
+                            {photo.credit}
+                          </figcaption>
+                        )}
+                      </div>
+                    </figure>
+                  ))}
+                </div>
+                {ride.imageCredit && (
+                  <p className="mt-3 text-[10px] leading-relaxed text-zinc-500">
+                    Hero photograph: {ride.imageCredit}. Route photography via Wikimedia Commons,
+                    used under the credited Creative Commons licences.
+                  </p>
+                )}
+              </div>
+            )}
+
             {/* Official Support & Inclusions */}
             {ride.inclusions && ride.inclusions.length > 0 && (
               <div className="p-6 bg-[#121212] border border-border/80 rounded-sm">
@@ -378,6 +449,67 @@ export default async function RideDetailPage({ params }: PageProps) {
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* More Expeditions */}
+        <div className="mt-14 pt-10 border-t border-border/70">
+          <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
+            <div>
+              <span className="text-[10px] font-heading uppercase tracking-[0.2em] text-accent font-bold block mb-1">
+                Keep Exploring
+              </span>
+              <h2 className="font-heading text-2xl font-bold uppercase text-white tracking-wide">
+                More Nepal Expeditions
+              </h2>
+            </div>
+            <Link
+              href="/rides"
+              className="inline-flex items-center gap-1 text-xs font-heading font-bold uppercase tracking-wider text-zinc-400 hover:text-accent transition-colors group/all"
+            >
+              All six rides
+              <ChevronRight className="w-4 h-4 text-accent transition-transform group-hover/all:translate-x-0.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {relatedRides.map((other) => (
+              <Link
+                key={other.id}
+                href={other.href}
+                className="group overflow-hidden rounded-sm border border-border bg-[#111111] transition-colors hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden border-b border-border/60 bg-[#161616]">
+                  <OptimizedImage
+                    src={other.image}
+                    alt={other.imageAlt || other.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    transformation={{ width: 800, quality: 75, format: 'auto' }}
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                    fallbackText={other.name}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-black/20 pointer-events-none" />
+                  <Badge
+                    className={cn(
+                      'absolute top-2.5 left-2.5 text-[9px] font-heading uppercase tracking-widest font-bold border rounded-sm',
+                      categoryBadgeColors[other.category] || 'bg-secondary text-white'
+                    )}
+                  >
+                    {other.category}
+                  </Badge>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-heading text-base font-bold uppercase text-white tracking-wide transition-colors group-hover:text-accent">
+                    {other.name}
+                  </h3>
+                  <p className="mt-1 text-[11px] font-heading uppercase tracking-wider text-zinc-500">
+                    {other.duration}
+                    {other.distance ? ` · ${other.distance}` : ''}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
