@@ -8,11 +8,18 @@ import {
   useState,
   useCallback,
 } from 'react';
-import type { User } from '@supabase/supabase-js';
-import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@/lib/supabase/types';
+import { authClient } from '@/lib/auth/client';
+import type { Profile } from '@/lib/types/db';
 
-type Profile = Database['public']['Tables']['profiles']['Row'];
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  image?: string | null;
+  emailVerified?: boolean;
+  createdAt?: string | Date;
+  created_at?: string | Date;
+};
 
 type AuthContextType = {
   user: User | null;
@@ -24,63 +31,78 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, isPending } = authClient.useSession();
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
-
-  const fetchProfile = useCallback(async (userId: string) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    setProfile(data);
-  }, [supabase]);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const refreshProfile = useCallback(async () => {
-    if (user) await fetchProfile(user.id);
-  }, [user, fetchProfile]);
-
-  useEffect(() => {
-    // Get initial session
-    const initAuth = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        }
-      } catch (error) {
-        console.error('Auth init error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initAuth();
-
-    // Listen for auth state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await fetchProfile(session.user.id);
+    if (!session?.user) {
+      setProfile(null);
+      return;
+    }
+    try {
+      setProfileLoading(true);
+      const res = await fetch('/api/profile');
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data.profile ?? null);
       } else {
         setProfile(null);
       }
-      setLoading(false);
-    });
+    } catch {
+      setProfile(null);
+    } finally {
+      setProfileLoading(false);
+    }
+  }, [session?.user]);
 
-    return () => subscription.unsubscribe();
-  }, [supabase, fetchProfile]);
+  useEffect(() => {
+    let active = true;
+    if (session?.user) {
+      fetch('/api/profile')
+        .then((res) => (res.ok ? res.json() : { profile: null }))
+        .then((data) => {
+          if (active) {
+            setProfile(data.profile ?? null);
+          }
+        })
+        .catch(() => {
+          if (active) {
+            setProfile(null);
+          }
+        });
+    }
+    return () => {
+      active = false;
+    };
+  }, [session?.user]);
+
+  const sessionUser = session?.user;
+  const user: User | null = sessionUser
+    ? {
+        id: sessionUser.id,
+        email: sessionUser.email,
+        name: sessionUser.name,
+        image: sessionUser.image,
+        emailVerified: sessionUser.emailVerified,
+        createdAt: sessionUser.createdAt,
+        created_at:
+          'created_at' in sessionUser && sessionUser.created_at
+            ? (sessionUser.created_at as string | Date)
+            : sessionUser.createdAt,
+      }
+    : null;
+
+  const currentProfile = user ? profile : null;
 
   return (
     <AuthContext.Provider
-      value={{ user, profile, loading, refreshProfile }}
+      value={{
+        user,
+        profile: currentProfile,
+        loading: isPending || profileLoading,
+        refreshProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>

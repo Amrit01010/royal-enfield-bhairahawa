@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { getMotorcycleColor, motorcycles } from '@/lib/constants/motorcycles';
-import { createClient } from '@/lib/supabase/server';
-import type { Database } from '@/lib/supabase/types';
+import { auth } from '@/lib/auth/server';
+import { sql } from '@/lib/db';
 
 export type BookTestRideState = {
   success: boolean;
@@ -11,10 +11,7 @@ export type BookTestRideState = {
   field?: string;
 };
 
-type TestRideInsert = Database['public']['Tables']['test_rides']['Insert'];
-
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MISSING_COLUMN_PATTERN = /column|schema cache|could not find/i;
 
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -31,24 +28,6 @@ function isPastDate(value: string) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return new Date(`${value}T00:00:00`) < today;
-}
-
-function composeLegacyNotes(input: {
-  name: string;
-  email: string;
-  phone: string;
-  time: string;
-  notes: string;
-}) {
-  return [
-    `Preferred time: ${input.time}`,
-    `Rider: ${input.name}`,
-    `Email: ${input.email}`,
-    `Phone: ${input.phone}`,
-    input.notes ? `Notes: ${input.notes}` : '',
-  ]
-    .filter(Boolean)
-    .join('\n');
 }
 
 export async function bookTestRide(
@@ -100,59 +79,48 @@ export async function bookTestRide(
     .filter(Boolean)
     .join('\n');
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const { data: session } = await auth.getSession();
+    const user = session?.user;
 
-  if (!user) {
-    return {
-      success: false,
-      error: 'You must be signed in to book a test ride.',
-    };
-  }
-
-  const payload: TestRideInsert = {
-    user_id: user.id,
-    motorcycle_id: motorcycleId,
-    preferred_date: preferredDate,
-    preferred_time: preferredTime,
-    rider_name: name,
-    rider_email: email,
-    rider_phone: phone,
-    notes: compiledNotes || null,
-    status: 'pending',
-  };
-
-  const { error } = await supabase.from('test_rides').insert(payload);
-
-  if (error && MISSING_COLUMN_PATTERN.test(error.message)) {
-    const { error: fallbackError } = await supabase.from('test_rides').insert({
-      user_id: user.id,
-      motorcycle_id: motorcycleId,
-      preferred_date: preferredDate,
-      notes: composeLegacyNotes({
-        name,
-        email,
-        phone,
-        time: preferredTime || 'Showroom Hours',
-        notes: [selectedColor ? `Colour: ${selectedColor.name}` : '', rawNotes]
-          .filter(Boolean)
-          .join('\n'),
-      }),
-      status: 'pending',
-    });
-
-    if (fallbackError) {
-      return { success: false, error: fallbackError.message };
+    if (!user) {
+      return {
+        success: false,
+        error: 'You must be signed in to book a test ride.',
+      };
     }
-  } else if (error) {
-    return { success: false, error: error.message };
+
+    await sql`
+      INSERT INTO public.test_rides (
+        user_id,
+        motorcycle_id,
+        preferred_date,
+        preferred_time,
+        rider_name,
+        rider_email,
+        rider_phone,
+        notes,
+        status
+      ) VALUES (
+        ${user.id},
+        ${motorcycleId},
+        ${preferredDate},
+        ${preferredTime},
+        ${name},
+        ${email},
+        ${phone},
+        ${compiledNotes || null},
+        'pending'
+      )
+    `;
+
+    revalidatePath('/account');
+    revalidatePath('/book');
+    revalidatePath(`/models/${motorcycleId}`);
+
+    return { success: true };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to book test ride';
+    return { success: false, error: message };
   }
-
-  revalidatePath('/account');
-  revalidatePath('/book');
-  revalidatePath(`/models/${motorcycleId}`);
-
-  return { success: true };
 }

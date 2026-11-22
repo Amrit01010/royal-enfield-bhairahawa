@@ -19,6 +19,8 @@ import {
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'My Account',
   description: 'Manage your Royal Enfield Bhairahawa account.',
