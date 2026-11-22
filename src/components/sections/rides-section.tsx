@@ -311,7 +311,7 @@ export function RidesSection({ condensed = false }: RidesSectionProps) {
                   {/* Visual Image Block */}
                   <Link
                     href={ride.href}
-                    aria-label={`Open the ${ride.name} expedition briefing`}
+                    aria-label={`Open the ${ride.name} route details`}
                     className="relative block aspect-[16/10] overflow-hidden bg-[#161616] border-b border-border/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
                   >
                     <OptimizedImage
@@ -357,7 +357,7 @@ export function RidesSection({ condensed = false }: RidesSectionProps) {
                     {/* Hover cue */}
                     <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-center gap-1 bg-gradient-to-t from-black/80 to-transparent pt-8 pb-2.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                       <span className="text-[10px] font-heading uppercase tracking-[0.2em] text-white">
-                        View briefing
+                        View Route
                       </span>
                       <ChevronRight className="w-3.5 h-3.5 text-accent" />
                     </div>
@@ -424,7 +424,7 @@ export function RidesSection({ condensed = false }: RidesSectionProps) {
                     asChild
                   >
                     <Link href={ride.href}>
-                      Briefing
+                      View Routes
                       <ChevronRight className="w-3.5 h-3.5 ml-1" />
                     </Link>
                   </Button>
@@ -433,11 +433,11 @@ export function RidesSection({ condensed = false }: RidesSectionProps) {
                     type="button"
                     onClick={() => setActiveModalRide(ride)}
                     aria-haspopup="dialog"
-                    className="h-9 px-3 bg-secondary hover:bg-zinc-800 text-zinc-300 hover:text-white border border-border rounded-sm transition-colors text-xs font-heading font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
-                    title="Expedition Dossier"
+                    className="h-9 px-3.5 bg-secondary hover:bg-zinc-800 text-zinc-300 hover:text-white border border-border rounded-sm transition-colors text-xs font-heading font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
+                    title="View Details"
                   >
                     <Info className="w-3.5 h-3.5 text-accent" />
-                    <span className="hidden sm:inline">Dossier</span>
+                    <span>Details</span>
                   </button>
 
                   <a
