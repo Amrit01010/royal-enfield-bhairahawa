@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, ShoppingCart, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { navItems, getMotorcycle, getMotorcycleStudioColor } from '@/lib/constants/motorcycles';
+import { rides } from '@/lib/constants/rides';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { useCart } from '@/hooks/use-cart';
@@ -32,6 +33,14 @@ export function Navbar() {
       if (img) {
         prefetchEngine.prefetchImmediate(
           getImageKitUrl(img, { width: 1200, quality: 85, format: 'auto' })
+        );
+      }
+    } else if (href.startsWith('/rides/')) {
+      const slug = href.replace('/rides/', '');
+      const ride = rides.find((r) => r.id === slug);
+      if (ride?.image) {
+        prefetchEngine.prefetchImmediate(
+          getImageKitUrl(ride.image, { width: 1400, quality: 78, format: 'auto' })
         );
       }
     }
@@ -124,7 +133,7 @@ export function Navbar() {
                     <div className="absolute top-full left-0 mt-1 w-64 bg-[#0F0F0F]/95 backdrop-blur-2xl border border-white/10 rounded-sm p-1.5 shadow-2xl animate-scale-in">
                       <div className="px-3 py-1.5 border-b border-white/[0.06] mb-1">
                         <span className="text-[10px] font-mono tracking-[0.2em] text-accent uppercase font-semibold">
-                          {item.label} Range
+                          {item.label === 'Rides' ? 'Nepal Expeditions' : `${item.label} Range`}
                         </span>
                       </div>
                       {item.children.map((child) => (
