@@ -7,7 +7,7 @@ import { OptimizedImage } from '@/components/shared/optimized-image';
 import { getImageKitUrl } from '@/lib/imagekit';
 import { siteConfig } from '@/config/site';
 
-const socialImage = getImageKitUrl('/Royal Enfield/banners/himalayan.jpg', {
+const socialImage = getImageKitUrl('/royal-enfield/banners/himalayan.jpg', {
   width: 1200,
   height: 630,
   cropMode: 'crop',
@@ -35,7 +35,7 @@ export default function RidesPage() {
       <section className="relative py-16 sm:py-24 border-b border-border/70 overflow-hidden bg-[#0C0C0C]">
         {/* Himalayan hero photograph */}
         <OptimizedImage
-          src="/Royal Enfield/banners/himalayan.jpg"
+          src="/royal-enfield/banners/himalayan.jpg"
           alt="Royal Enfield riders on a high Himalayan highway"
           fill
           priority
@@ -113,7 +113,7 @@ export default function RidesPage() {
       {/* Community Chapter Inquiries Footer Bar */}
       <section className="relative py-12 bg-[#0E0E0E] border-t border-border/70 overflow-hidden">
         <OptimizedImage
-          src="/Royal Enfield/banners/mountain.jpg"
+          src="/royal-enfield/banners/mountain.jpg"
           alt="A Royal Enfield motorcycle on a mountain trail above the clouds"
           fill
           sizes="100vw"

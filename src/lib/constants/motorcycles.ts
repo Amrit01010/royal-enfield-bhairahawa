@@ -11,8 +11,8 @@ export const heroSlides: HeroSlide[] = [
   //   category: 'Adventure Tourer · 400cc+',
   //   cta: 'Book Test Ride',
   //   href: '/models/himalayan-450',
-  //   image: '/Royal Enfield/bikes/himalayan-450.jpg',
-  //   actionImage: '/Royal Enfield/banners/mountain.jpg',
+  //   image: '/royal-enfield/bikes/himalayan-450.jpg',
+  //   actionImage: '/royal-enfield/banners/mountain.jpg',
   //   specs: {
   //     displacement: '452 cc',
   //     power: '40.02 PS',
@@ -29,8 +29,8 @@ export const heroSlides: HeroSlide[] = [
     category: 'Urban Roadster · 350cc',
     cta: 'Book Test Ride',
     href: '/models/hunter-350',
-    image: '/Royal Enfield/bikes/hunter-350.jpg',
-    actionImage: '/Royal Enfield/actions/hunter.jpg',
+    image: '/royal-enfield/bikes/hunter-350.jpg',
+    actionImage: '/royal-enfield/actions/hunter.jpg',
     studioColorId: 'dapper-grey',
     specs: {
       displacement: '349 cc',
@@ -48,8 +48,8 @@ export const heroSlides: HeroSlide[] = [
     category: 'Highway Cruiser · 350cc',
     cta: 'Book Test Ride',
     href: '/models/meteor-350',
-    image: '/Royal Enfield/bikes/meteor-350.jpg',
-    actionImage: '/Royal Enfield/actions/meteor.jpg',
+    image: '/royal-enfield/bikes/meteor-350.jpg',
+    actionImage: '/royal-enfield/actions/meteor.jpg',
     studioColorId: 'supernova-black',
     specs: {
       displacement: '349 cc',
@@ -67,8 +67,8 @@ export const heroSlides: HeroSlide[] = [
     category: 'Bobber Cruiser · 350cc',
     cta: 'Book Test Ride',
     href: '/models/goan-classic-350',
-    image: '/Royal Enfield/bikes/goan-classic-350.jpg',
-    actionImage: '/Royal Enfield/actions/goan.jpg',
+    image: '/royal-enfield/bikes/goan-classic-350.jpg',
+    actionImage: '/royal-enfield/actions/goan.jpg',
     studioColorId: 'supernova-black',
     specs: {
       displacement: '349 cc',
@@ -86,8 +86,8 @@ export const heroSlides: HeroSlide[] = [
     category: 'Retro Classic · 350cc',
     cta: 'Book Test Ride',
     href: '/models/classic-350',
-    image: '/Royal Enfield/bikes/classic-350.jpg',
-    actionImage: '/Royal Enfield/actions/classic-black.jpg',
+    image: '/royal-enfield/bikes/classic-350.jpg',
+    actionImage: '/royal-enfield/actions/classic-black.jpg',
     studioColorId: 'stealth-black',
     specs: {
       displacement: '349 cc',
@@ -105,8 +105,8 @@ export const heroSlides: HeroSlide[] = [
   //   category: 'Premium Roadster · 400cc+',
   //   cta: 'Book Test Ride',
   //   href: '/models/guerrilla-450',
-  //   image: '/Royal Enfield/bikes/guerrilla-450.jpg',
-  //   actionImage: '/Royal Enfield/actions/guerrilla.jpg',
+  //   image: '/royal-enfield/bikes/guerrilla-450.jpg',
+  //   actionImage: '/royal-enfield/actions/guerrilla.jpg',
   //   specs: {
   //     displacement: '452 cc',
   //     power: '40.02 PS',
@@ -123,8 +123,8 @@ export const heroSlides: HeroSlide[] = [
   //   category: 'All-Terrain Scrambler · 400cc+',
   //   cta: 'Book Test Ride',
   //   href: '/models/scram-440',
-  //   image: '/Royal Enfield/bikes/scram-440.jpg',
-  //   actionImage: '/Royal Enfield/actions/scram.jpg',
+  //   image: '/royal-enfield/bikes/scram-440.jpg',
+  //   actionImage: '/royal-enfield/actions/scram.jpg',
   //   specs: {
   //     displacement: '443 cc',
   //     power: '25.0 PS',
@@ -144,7 +144,7 @@ export const motorcycles: Motorcycle[] = [
     category: '350cc',
     subcategory: 'Urban Roadster',
     href: '/models/hunter-350',
-    image: '/Royal Enfield/bikes/hunter-350.jpg',
+    image: '/royal-enfield/bikes/hunter-350.jpg',
     colors: motorcycleColors['hunter-350'],
     specs: {
       engine: '349cc J-Series Single Cylinder',
@@ -162,7 +162,7 @@ export const motorcycles: Motorcycle[] = [
     category: '350cc',
     subcategory: 'Highway Cruiser',
     href: '/models/meteor-350',
-    image: '/Royal Enfield/bikes/meteor-350.jpg',
+    image: '/royal-enfield/bikes/meteor-350.jpg',
     colors: motorcycleColors['meteor-350'],
     specs: {
       engine: '349cc Air-Oil Cooled SOHC',
@@ -180,7 +180,7 @@ export const motorcycles: Motorcycle[] = [
     category: '350cc',
     subcategory: 'Bobber Cruiser',
     href: '/models/goan-classic-350',
-    image: '/Royal Enfield/bikes/goan-classic-350.jpg',
+    image: '/royal-enfield/bikes/goan-classic-350.jpg',
     colors: motorcycleColors['goan-classic-350'],
     specs: {
       engine: '349cc J-Series Single Cylinder',
@@ -198,7 +198,7 @@ export const motorcycles: Motorcycle[] = [
     category: '350cc',
     subcategory: 'Retro Motorcycle',
     href: '/models/classic-350',
-    image: '/Royal Enfield/bikes/classic-350.jpg',
+    image: '/royal-enfield/bikes/classic-350.jpg',
     colors: motorcycleColors['classic-350'],
     specs: {
       engine: '349cc Air-Oil Cooled Single',
@@ -216,7 +216,7 @@ export const motorcycles: Motorcycle[] = [
   //   category: '400cc+',
   //   subcategory: 'Scrambler',
   //   href: '/models/scram-440',
-  //   image: '/Royal Enfield/bikes/scram-440.jpg',
+  //   image: '/royal-enfield/bikes/scram-440.jpg',
   //   specs: {
   //     engine: '443cc Air-Oil Cooled Single',
   //     power: '25 PS @ 6250 rpm',
@@ -233,7 +233,7 @@ export const motorcycles: Motorcycle[] = [
   //   category: '400cc+',
   //   subcategory: 'Adventure Tourer',
   //   href: '/models/himalayan-450',
-  //   image: '/Royal Enfield/bikes/himalayan-450.jpg',
+  //   image: '/royal-enfield/bikes/himalayan-450.jpg',
   //   isNew: true,
   //   specs: {
   //     engine: '452cc Sherpa Liquid-Cooled DOHC',
@@ -251,7 +251,7 @@ export const motorcycles: Motorcycle[] = [
   //   category: '400cc+',
   //   subcategory: 'Premium Roadster',
   //   href: '/models/guerrilla-450',
-  //   image: '/Royal Enfield/bikes/guerrilla-450.jpg',
+  //   image: '/royal-enfield/bikes/guerrilla-450.jpg',
   //   specs: {
   //     engine: '452cc Sherpa Liquid-Cooled 4V',
   //     power: '40.02 PS @ 8000 rpm',
