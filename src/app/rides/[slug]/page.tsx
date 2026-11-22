@@ -109,12 +109,8 @@ export default async function RideDetailPage({ params }: PageProps) {
             className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors group"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-accent transition-transform group-hover:-translate-x-1" />
-            Back to All Expeditions
+            All Expeditions
           </Link>
-
-          <span className="text-[11px] font-heading uppercase tracking-widest text-zinc-500 hidden sm:inline-block">
-            Official Royal Enfield Expedition Briefing
-          </span>
         </div>
       </div>
 
@@ -243,7 +239,7 @@ export default async function RideDetailPage({ params }: PageProps) {
               <div className="p-5 bg-[#121212] border border-border/80 rounded-sm">
                 <div className="flex items-center gap-2 text-xs font-heading uppercase tracking-widest text-accent font-bold mb-3">
                   <MapPin className="w-4 h-4 text-accent" />
-                  Official Expedition Circuit Route
+                  Route
                 </div>
                 <p className="text-sm sm:text-base text-zinc-200 leading-relaxed font-mono bg-black/50 p-4 border border-border/60 rounded-sm">
                   {ride.route}
@@ -255,15 +251,10 @@ export default async function RideDetailPage({ params }: PageProps) {
             <div className="p-6 bg-[#121212] border border-border/80 rounded-sm">
               <h2 className="font-heading text-lg font-bold uppercase text-white tracking-wider mb-4 flex items-center gap-2">
                 <span className="w-1.5 h-4 bg-accent" />
-                The Expedition Briefing
+                Briefing
               </h2>
               <div className="space-y-4 text-sm text-zinc-300 leading-relaxed font-sans">
                 <p>{ride.fullDescription || ride.description}</p>
-                <p className="text-xs text-zinc-400">
-                  Participants receive full logistical support including route roadbooks, emergency
-                  radio contact, support vehicles, mechanical inspection at each night halt, and
-                  organized high-altitude medical support.
-                </p>
               </div>
             </div>
 

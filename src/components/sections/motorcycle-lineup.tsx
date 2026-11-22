@@ -32,21 +32,17 @@ export function MotorcycleLineup() {
     <section className="relative py-20 lg:py-28 bg-[#0D0D0D] [content-visibility:auto] [contain-intrinsic-size:1px_800px]">
       <div className="container mx-auto px-4 lg:px-8 relative">
         <SectionHeading
-          label="Motorcycle Range"
-          title="The Royal Enfield Lineup"
-          description="Explore our complete fleet available at our official Bhairahawa showroom. Engineered with pure motorcycling heritage."
+          label="Fleet"
+          title="Motorcycle Lineup"
         />
 
         {/* 350cc Series */}
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-6 pb-3 border-b border-border">
-            <div className="w-2 h-4 bg-accent" />
-            <h3 className="font-heading text-lg tracking-wider text-white uppercase font-bold">
-              350cc Series — J-Platform
+            <div className="w-1.5 h-3.5 bg-accent" />
+            <h3 className="font-heading text-base tracking-wider text-white uppercase font-bold">
+              350cc Series
             </h3>
-            <span className="text-xs font-heading text-zinc-500 uppercase tracking-widest ml-auto">
-              Classic & Urban Cruisers
-            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -127,12 +123,9 @@ function MotorcycleCard({
           <p className="font-heading text-[11px] tracking-[0.2em] text-accent uppercase font-semibold mb-1">
             {motorcycle.subcategory}
           </p>
-          <h3 className="font-heading text-2xl font-bold uppercase text-white mb-2 group-hover:text-accent transition-colors tracking-wide">
+          <h3 className="font-heading text-xl font-bold uppercase text-white group-hover:text-accent transition-colors tracking-wide">
             {motorcycle.name}
           </h3>
-          <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-4">
-            {motorcycle.description}
-          </p>
         </CardContent>
       </div>
 
@@ -141,7 +134,7 @@ function MotorcycleCard({
           href={motorcycle.href}
           className="inline-flex items-center gap-1 text-xs font-heading font-bold uppercase tracking-wider text-white hover:text-accent transition-colors group/link"
         >
-          View Specs & Booking
+          View Specs
           <ArrowUpRight className="w-3.5 h-3.5 text-accent transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
         </Link>
         <Link

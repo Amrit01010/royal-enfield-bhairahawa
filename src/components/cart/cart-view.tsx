@@ -5,10 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
-  CheckCircle2,
   MapPin,
-  MessageSquare,
-  ShieldCheck,
   ShoppingBag,
   Trash2,
 } from 'lucide-react';
@@ -78,25 +75,20 @@ export function CartView() {
       {/* Selected Items List */}
       <div className="lg:col-span-2 space-y-4">
         {/* Motorcycle Model Selector Banner */}
-        <div className="bg-secondary/40 border border-border rounded-sm p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <div>
-              <p className="text-xs font-heading font-bold uppercase tracking-wider text-white">
-                Which Royal Enfield model do you ride?
-              </p>
-              <p className="text-[11px] text-zinc-400">
-                Helps the showroom owner confirm exact fitment and mounting brackets.
-              </p>
-            </div>
+        <div className="bg-secondary/40 border border-border rounded-sm p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <p className="text-xs font-heading font-bold uppercase tracking-wider text-white">
+              Target Model for Fitment Check
+            </p>
           </div>
           <select
             value={selectedBike}
             onChange={(e) => setSelectedBike(e.target.value)}
-            className="h-10 px-3 bg-card border border-border rounded-sm text-xs font-heading uppercase tracking-wider text-white focus:outline-none focus:border-accent w-full sm:w-auto min-w-[200px]"
+            className="h-9 px-3 bg-card border border-border rounded-sm text-xs font-heading uppercase tracking-wider text-white focus:outline-none focus:border-accent w-full sm:w-auto min-w-[200px]"
             aria-label="Select motorcycle for inquiry"
           >
-            <option value="all">Select Model (Optional)</option>
+            <option value="all">Any / Universal</option>
             {accessoryBikes
               .filter((b) => b.id !== 'all')
               .map((bike) => (
@@ -261,32 +253,12 @@ export function CartView() {
             className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-black font-heading uppercase tracking-wider font-bold h-12 rounded-sm flex items-center justify-center gap-2.5 transition-all shadow-lg shadow-[#25D366]/20 text-xs sm:text-sm hover:scale-[1.01]"
           >
             <WhatsAppIcon className="w-5 h-5 text-black shrink-0" />
-            Contact Showroom via WhatsApp
+            Send Inquiry via WhatsApp
           </a>
 
-          <div className="bg-secondary/40 border border-white/5 rounded-sm p-3 space-y-2">
-            <div className="flex items-start gap-2 text-zinc-300 text-[11px] leading-relaxed">
-              <MessageSquare className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
-              <span>
-                Clicking opens WhatsApp with your pre-formatted accessories list ready to message the showroom owner directly.
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-[11px] text-zinc-400 pt-1 border-t border-border/50">
-              <MapPin className="w-3.5 h-3.5 text-accent shrink-0" />
-              <span className="truncate">{siteConfig.location.address}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Showroom Guarantees */}
-        <div className="space-y-2 pt-2 border-t border-border">
-          <div className="flex items-center gap-2 text-zinc-300 text-[11px]">
-            <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0" />
-            <span>100% Genuine Royal Enfield Accessories</span>
-          </div>
-          <div className="flex items-center gap-2 text-zinc-300 text-[11px]">
-            <ShieldCheck className="w-3.5 h-3.5 text-accent shrink-0" />
-            <span>Showroom warranty & fitting support</span>
+          <div className="flex items-center gap-2 text-[11px] text-zinc-400 px-1">
+            <MapPin className="w-3.5 h-3.5 text-accent shrink-0" />
+            <span className="truncate">{siteConfig.location.address}</span>
           </div>
         </div>
       </aside>

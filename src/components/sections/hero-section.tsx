@@ -199,30 +199,15 @@ export function HeroSection() {
           {/* LEFT ZONE: Brand Lineage, Model Title, Specs HUD & CTAs (Col 1-5)      */}
           {/* --------------------------------------------------------------------- */}
           <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1">
-            {/* Heritage & Dealership Pill */}
-            <div className="flex flex-wrap items-center gap-2.5 mb-5 animate-fade-in">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/15 border border-accent/30 rounded-sm shadow-sm shadow-accent/10">
-                <span className="font-heading text-xs tracking-[0.25em] text-accent uppercase font-bold">
-                  PURE MOTORCYCLING · SINCE 1901
-                </span>
-              </div>
-              <span className="text-zinc-600 font-mono text-xs hidden sm:inline">/</span>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.03] border border-white/10 rounded-sm">
-                <span className="font-heading text-[11px] tracking-[0.2em] text-zinc-300 uppercase font-semibold">
-                  SHOWROOM BHAIRAHAWA
-                </span>
-              </div>
-            </div>
-
-            {/* Model Subcategory / Series Indicator */}
-            <div className="flex items-center gap-2 mb-2 animate-slide-up">
-              <span className="w-2 h-3.5 bg-accent rounded-[1px]" />
-              <span className="font-heading text-xs sm:text-sm tracking-[0.22em] text-accent font-bold uppercase">
-                {slide.category || 'Official Showroom Fleet'}
+            {/* Model Series Indicator */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-3 bg-accent rounded-[1px]" />
+              <span className="font-heading text-xs tracking-[0.2em] text-accent font-semibold uppercase">
+                {slide.category || 'Royal Enfield'}
               </span>
             </div>
 
-            {/* Main Model Headline (Bold Oswald, properly proportioned to never overlap) */}
+            {/* Main Model Headline */}
             <h1
               key={`title-${slide.id}`}
               className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-heading font-black tracking-tight text-white uppercase leading-[0.92] mb-3 animate-slide-up"
@@ -233,17 +218,9 @@ export function HeroSection() {
             {/* Tagline */}
             <p
               key={`subtitle-${slide.id}`}
-              className="text-lg sm:text-xl font-heading text-zinc-200 tracking-wide mb-2 animate-slide-up delay-100"
+              className="text-base sm:text-lg font-heading text-zinc-300 tracking-wide mb-6 animate-slide-up delay-100"
             >
               {slide.subtitle}
-            </p>
-
-            {/* Short Narrative Copy */}
-            <p
-              key={`desc-${slide.id}`}
-              className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed max-w-xl mb-6 line-clamp-3 animate-slide-up delay-200"
-            >
-              {slide.description}
             </p>
 
             {/* Precision Mechanical Telemetry HUD (Key Rider Specs) */}
@@ -316,7 +293,7 @@ export function HeroSection() {
                 href="/models"
                 className="inline-flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider text-zinc-400 hover:text-white transition-colors ml-1"
               >
-                <span>All 7 Models</span>
+                <span>All Models</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-accent" />
               </Link>
             </div>
@@ -340,14 +317,8 @@ export function HeroSection() {
               +
             </div>
 
-            {/* Stage Header Info Strip & View Mode Switcher */}
-            <div className="flex items-center justify-between gap-2 mb-2 px-1">
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                <span className="font-heading text-[10px] sm:text-xs uppercase tracking-[0.25em] text-zinc-400 font-semibold">
-                  Official Showroom Unit · Bhairahawa
-                </span>
-              </div>
+            {/* Stage Header View Mode Switcher */}
+            <div className="flex items-center justify-end gap-2 mb-2 px-1">
 
               {/* Studio vs Action Toggle Pill (if action banner exists) */}
               {slide.actionImage && (
@@ -446,23 +417,6 @@ export function HeroSection() {
                     ROYAL ENFIELD
                   </div>
                 )}
-              </div>
-
-              {/* Top-Right Badge: Dealership Status */}
-              <div className="absolute top-3.5 right-3.5 z-10">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-black/80 border border-white/10 rounded-sm font-heading text-[10px] tracking-widest text-zinc-300 uppercase backdrop-blur-md">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                  Ready For Delivery
-                </span>
-              </div>
-
-              {/* Bottom-Left Metadata HUD Tag */}
-              <div className="absolute bottom-3 left-3 z-10">
-                <div className="px-2.5 py-1 bg-black/85 border border-white/10 rounded-sm backdrop-blur-md">
-                  <span className="font-heading text-[10px] tracking-[0.2em] text-zinc-300 uppercase">
-                    Nepal Spec · Dual ABS · 2026 Fleet
-                  </span>
-                </div>
               </div>
 
               {/* Interactive Hover Indicator */}

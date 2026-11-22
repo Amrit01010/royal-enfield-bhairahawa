@@ -144,7 +144,6 @@ export default async function MotorcyclePage({
           <SectionHeading
             label="Test Ride"
             title={`Book a ${motorcycle.name} test ride`}
-            description="Experience this motorcycle at our Bhairahawa showroom. Book directly via WhatsApp for instant confirmation."
             align="center"
           />
           <TestRideForm motorcycleId={motorcycle.id} lockMotorcycle />

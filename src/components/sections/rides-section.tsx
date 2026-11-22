@@ -54,29 +54,29 @@ export function RidesSection() {
 
   const categories = useMemo(() => {
     const allCategories: { label: string; value: FilterCategory; count: number }[] = [
-      { label: 'All Rides', value: 'ALL', count: rides.length },
+      { label: 'All', value: 'ALL', count: rides.length },
       {
-        label: 'Marquee Flagships',
+        label: 'Marquee',
         value: 'Marquee',
         count: rides.filter((r) => r.category === 'Marquee').length,
       },
       {
-        label: 'Himalayan Adventures',
+        label: 'Himalayan',
         value: 'Himalayan Adventure',
         count: rides.filter((r) => r.category === 'Himalayan Adventure').length,
       },
       {
-        label: 'Discovery Tours',
+        label: 'Discovery',
         value: 'Discovery',
         count: rides.filter((r) => r.category === 'Discovery').length,
       },
       {
-        label: 'Community & Festivals',
+        label: 'Community',
         value: 'Community & Festival',
         count: rides.filter((r) => r.category === 'Community & Festival').length,
       },
       {
-        label: 'Training Academy',
+        label: 'Training',
         value: 'Training',
         count: rides.filter((r) => r.category === 'Training').length,
       },
@@ -169,47 +169,10 @@ export function RidesSection() {
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <SectionHeading
-          label="Bhairahawa Ride Calendar"
-          title="Pick Your Line Through Nepal"
-          description="From a sunrise run to Lumbini to the walled city of Lo Manthang — filter by terrain, difficulty, or destination, then open the full briefing."
+          label="Expeditions"
+          title="Rides & Tours"
           align="center"
         />
-
-        {/* Telemetry Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto mt-8 mb-12 p-3 sm:p-4 bg-[#121212] border border-border/70 rounded-sm">
-          <div className="text-center p-2 border-r border-border/50 last:border-r-0">
-            <span className="font-heading text-xl sm:text-2xl font-black text-white tracking-wider block">
-              {rides.length}
-            </span>
-            <span className="text-[10px] sm:text-xs font-heading uppercase tracking-widest text-zinc-400">
-              Curated Rides
-            </span>
-          </div>
-          <div className="text-center p-2 border-r border-border/50 md:border-r last:border-r-0">
-            <span className="font-heading text-xl sm:text-2xl font-black text-accent tracking-wider block">
-              12,600 FT
-            </span>
-            <span className="text-[10px] sm:text-xs font-heading uppercase tracking-widest text-zinc-400">
-              Lo Manthang
-            </span>
-          </div>
-          <div className="text-center p-2 border-r border-border/50 last:border-r-0">
-            <span className="font-heading text-xl sm:text-2xl font-black text-white tracking-wider block">
-              1
-            </span>
-            <span className="text-[10px] sm:text-xs font-heading uppercase tracking-widest text-zinc-400">
-              Showroom Gateway
-            </span>
-          </div>
-          <div className="text-center p-2">
-            <span className="font-heading text-xl sm:text-2xl font-black text-emerald-400 tracking-wider block">
-              100%
-            </span>
-            <span className="text-[10px] sm:text-xs font-heading uppercase tracking-widest text-zinc-400">
-              RE Factory Support
-            </span>
-          </div>
-        </div>
 
         {/* Category Tabs */}
         <div className="flex items-center justify-start lg:justify-center gap-1.5 overflow-x-auto pb-3 mb-6 scrollbar-none">
@@ -257,7 +220,7 @@ export function RidesSection() {
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by expedition name, terrain, or route (e.g. Mustang, Lumbini, Pokhara)..."
+              placeholder="Search expeditions by name, route, or terrain..."
               className="w-full bg-[#181818] border border-border/80 text-white placeholder-zinc-500 text-xs pl-9 pr-9 py-2 rounded-sm focus:outline-none focus:border-accent transition-colors [&::-webkit-search-cancel-button]:hidden"
             />
             {searchQuery && (
@@ -409,7 +372,7 @@ export function RidesSection() {
                     )}
 
                     {/* Title */}
-                    <h3 className="font-heading text-xl font-bold uppercase text-white mb-2 tracking-wide">
+                    <h3 className="font-heading text-xl font-bold uppercase text-white mb-3 tracking-wide">
                       <Link
                         href={ride.href}
                         className="transition-colors group-hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
@@ -417,11 +380,6 @@ export function RidesSection() {
                         {ride.name}
                       </Link>
                     </h3>
-
-                    {/* Description */}
-                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-4">
-                      {ride.description}
-                    </p>
 
                     {/* Route Preview */}
                     {ride.route && (

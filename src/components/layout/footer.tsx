@@ -9,23 +9,6 @@ import { getWhatsAppNumber } from '@/lib/whatsapp';
 export function Footer() {
   return (
     <footer className="relative border-t border-border bg-[#0B0B0B]">
-      {/* Royal Enfield Heritage Banner */}
-      <div className="border-b border-border/70 bg-[#111111]/80 py-6">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-            <div className="flex items-center gap-3">
-              <span className="w-2 h-2 bg-accent" />
-              <span className="font-heading text-lg sm:text-xl font-bold tracking-[0.25em] text-white uppercase">
-                MADE LIKE A GUN · SINCE 1901
-              </span>
-            </div>
-            <p className="text-xs font-heading tracking-widest text-zinc-400 uppercase">
-              Official Royal Enfield Showroom & Service Center · Bhairahawa, Nepal
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}

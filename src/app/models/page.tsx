@@ -10,11 +10,10 @@ export const metadata = {
 export default function ModelsPage() {
   return (
     <div className="pt-24">
-      <div className="container mx-auto px-4 lg:px-8 py-12">
+      <div className="container mx-auto px-4 lg:px-8 py-10">
         <SectionHeading
-          label="Motorcycles"
-          title="Explore the complete lineup"
-          description="Discover the Royal Enfield range available at our Bhairahawa showroom. From classic 350cc cruisers to modern adventure tourers."
+          label="Showroom"
+          title="Motorcycles"
           align="center"
         />
       </div>

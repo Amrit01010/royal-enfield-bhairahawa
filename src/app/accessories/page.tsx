@@ -1,7 +1,7 @@
 // src/app/accessories/page.tsx
 import { AccessoriesCatalog } from '@/components/accessories/accessories-catalog';
 import { SectionHeading } from '@/components/shared/section-heading';
-import { accessories, accessoryBikes, accessoryCategories } from '@/lib/constants/accessories';
+import { accessoryBikes, accessoryCategories } from '@/lib/constants/accessories';
 import type { AccessoryCategory } from '@/lib/types';
 
 export const metadata = {
@@ -50,28 +50,10 @@ export default async function AccessoriesPage({
 
         <div className="container mx-auto px-4 lg:px-8 relative">
           <SectionHeading
-            label="Showroom Accessories"
-            title="Genuine Royal Enfield Accessories (GMA)"
-            description="Official accessories engineered specifically for your motorcycle model. Add items to your inquiry cart and connect directly with our Bhairahawa showroom owner on WhatsApp for availability and fitment."
+            label="Genuine Accessories"
+            title="Accessories & Gear"
             align="center"
           />
-
-          <div className="mt-2 mx-auto max-w-3xl grid grid-cols-3 border border-border bg-card/60 divide-x divide-border rounded-sm">
-            {[
-              { value: String(accessories.length), label: 'Genuine Parts' },
-              { value: String(accessoryBikes.length - 1), label: 'Motorcycles' },
-              { value: '100%', label: 'OEM Fitment' },
-            ].map((stat) => (
-              <div key={stat.label} className="py-4 text-center">
-                <p className="text-2xl sm:text-3xl font-heading font-bold text-white">
-                  {stat.value}
-                </p>
-                <p className="text-[10px] sm:text-[11px] font-heading uppercase tracking-[0.25em] text-zinc-400 mt-1">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

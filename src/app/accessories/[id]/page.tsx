@@ -33,9 +33,9 @@ export async function generateMetadata({
 }
 
 const assurances = [
-  { icon: BadgeCheck, title: '100% Genuine GMA', text: 'Official Royal Enfield motorcycle accessory' },
-  { icon: Wrench, title: 'Showroom Fitting', text: 'Professional installation available in Bhairahawa' },
-  { icon: ShieldCheck, title: 'Official Warranty', text: 'Backed by Royal Enfield manufacturer warranty' },
+  { icon: BadgeCheck, title: 'Genuine GMA', text: 'Official Royal Enfield part' },
+  { icon: Wrench, title: 'Showroom Fitting', text: 'Installation in Bhairahawa' },
+  { icon: ShieldCheck, title: 'Manufacturer Warranty', text: 'Royal Enfield warranty' },
 ];
 
 export default async function AccessoryDetailPage({
@@ -199,16 +199,11 @@ export default async function AccessoryDetailPage({
 
             {/* Add to Inquiry Cart & WhatsApp Direct Action */}
             <div className="bg-card border border-border border-t-2 border-t-accent rounded-sm p-5 mb-8">
-              <div className="flex items-start gap-3 mb-4">
-                <MapPin className="w-5 h-5 text-accent mt-0.5 shrink-0" />
-                <div>
-                  <p className="font-heading font-bold uppercase tracking-wide text-white text-sm">
-                    Bhairahawa Showroom Inquiries
-                  </p>
-                  <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                    Add to your inquiry cart to request availability, fitting, and quotation, or chat directly with our showroom owner via WhatsApp.
-                  </p>
-                </div>
+              <div className="flex items-center gap-2 mb-4">
+                <MapPin className="w-4 h-4 text-accent shrink-0" />
+                <span className="font-heading font-bold uppercase tracking-wider text-white text-xs">
+                  Bhairahawa Showroom Inquiry
+                </span>
               </div>
 
               {/* Client Product Actions */}

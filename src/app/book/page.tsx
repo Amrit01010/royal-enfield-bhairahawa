@@ -1,9 +1,6 @@
 // src/app/book/page.tsx
 import { Metadata } from 'next';
 import {
-  Shield,
-  Compass,
-  Bike,
   MapPin,
   Phone,
   Clock,
@@ -36,66 +33,14 @@ export default async function BookTestRidePage({
       <div className="absolute inset-0 bg-[radial-gradient(#202020_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10 max-w-5xl">
-        {/* Breadcrumb & Section Sub-header */}
-        <div className="mb-8 text-center">
-          <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 bg-accent/15 border border-accent/30 rounded-sm">
-            <span className="w-1.5 h-1.5 bg-accent" />
-            <span className="text-[11px] tracking-[0.25em] text-accent uppercase font-heading font-black">
-              ROYAL ENFIELD BHAIRAHAWA • OFFICIAL SHOWROOM
-            </span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold uppercase text-white tracking-wide mb-3">
+        {/* Section Header */}
+        <div className="mb-10 text-center">
+          <span className="text-[11px] tracking-[0.2em] text-accent uppercase font-heading font-semibold mb-2 block">
+            Showroom Appointment
+          </span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold uppercase text-white tracking-wide">
             Book a test ride
           </h1>
-          <p className="text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Feel the legendary thump firsthand. Select your preferred motorcycle, choose an official colourway, pick your date, and confirm your test ride appointment at our Bhairahawa showroom instantly on WhatsApp.
-          </p>
-        </div>
-
-        {/* Feature Highlights Banner (Matching Royal Enfield carousel-btr-head) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          <div className="p-4 sm:p-5 bg-[#121212] border border-border/80 rounded-sm flex items-center gap-3.5 hover:border-zinc-700 transition-colors">
-            <div className="w-11 h-11 rounded-sm bg-accent/10 border border-accent/25 flex items-center justify-center shrink-0">
-              <Shield className="w-5 h-5 text-accent" />
-            </div>
-            <div>
-              <h4 className="font-heading text-xs uppercase tracking-wider text-white font-bold mb-0.5">
-                Century-Old Legacy
-              </h4>
-              <p className="text-xs text-zinc-400 leading-snug">
-                Experience a century-old motorcycling legacy on Nepal roads.
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 sm:p-5 bg-[#121212] border border-border/80 rounded-sm flex items-center gap-3.5 hover:border-zinc-700 transition-colors">
-            <div className="w-11 h-11 rounded-sm bg-accent/10 border border-accent/25 flex items-center justify-center shrink-0">
-              <Bike className="w-5 h-5 text-accent" />
-            </div>
-            <div>
-              <h4 className="font-heading text-xs uppercase tracking-wider text-white font-bold mb-0.5">
-                The Perfect Match
-              </h4>
-              <p className="text-xs text-zinc-400 leading-snug">
-                Ride to figure out which Royal Enfield works best for you.
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 sm:p-5 bg-[#121212] border border-border/80 rounded-sm flex items-center gap-3.5 hover:border-zinc-700 transition-colors">
-            <div className="w-11 h-11 rounded-sm bg-accent/10 border border-accent/25 flex items-center justify-center shrink-0">
-              <Compass className="w-5 h-5 text-accent" />
-            </div>
-            <div>
-              <h4 className="font-heading text-xs uppercase tracking-wider text-white font-bold mb-0.5">
-                Hands-On Evaluation
-              </h4>
-              <p className="text-xs text-zinc-400 leading-snug">
-                Explore all features and handling of the motorcycle before choosing it.
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Main Test Ride Form Container */}
@@ -172,34 +117,25 @@ export default async function BookTestRidePage({
         </div>
 
         {/* What to Bring on Test Ride Day */}
-        <div className="mt-10 p-6 bg-[#141414] border border-border/80 rounded-sm max-w-4xl mx-auto">
+        <div className="mt-10 p-5 bg-[#141414] border border-border/80 rounded-sm max-w-4xl mx-auto">
           <div className="flex items-center gap-2 mb-3">
-            <FileCheck className="w-5 h-5 text-accent" />
-            <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-white">
-              Test Ride Day Checklist
+            <FileCheck className="w-4 h-4 text-accent" />
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-white">
+              Test Ride Checklist
             </h4>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-zinc-400">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-zinc-400">
             <div className="flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>
-                <strong className="text-white block font-heading uppercase">1. Original Driving License</strong>
-                Valid two-wheeler license issued by DoTM Nepal or International Permit.
-              </span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+              <span>Valid driving license (DoTM or International)</span>
             </div>
             <div className="flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>
-                <strong className="text-white block font-heading uppercase">2. Safety Riding Gear</strong>
-                ISI/DOT approved helmet & closed-toe footwear are strictly mandatory.
-              </span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+              <span>Helmet & closed footwear</span>
             </div>
             <div className="flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <span>
-                <strong className="text-white block font-heading uppercase">3. Minimum Age 18+</strong>
-                Rider must be at least 18 years old and physically ready to ride.
-              </span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+              <span>Minimum age 18+</span>
             </div>
           </div>
         </div>

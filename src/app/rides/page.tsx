@@ -1,7 +1,7 @@
 // src/app/rides/page.tsx
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Shield, Wrench, Compass, PhoneCall } from 'lucide-react';
+import { PhoneCall } from 'lucide-react';
 import { RidesSection } from '@/components/sections/rides-section';
 import { OptimizedImage } from '@/components/shared/optimized-image';
 import { getImageKitUrl } from '@/lib/imagekit';
@@ -32,7 +32,7 @@ export default function RidesPage() {
   return (
     <div className="pt-20 bg-[#090909] min-h-screen text-foreground">
       {/* Editorial Hero Header */}
-      <section className="relative py-16 sm:py-24 border-b border-border/70 overflow-hidden bg-[#0C0C0C]">
+      <section className="relative py-16 sm:py-20 border-b border-border/70 overflow-hidden bg-[#0C0C0C]">
         {/* Himalayan hero photograph */}
         <OptimizedImage
           src="/royal-enfield/banners/himalayan.jpg"
@@ -51,59 +51,20 @@ export default function RidesPage() {
         <div className="absolute inset-0 bg-[radial-gradient(#222_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
         <div className="container mx-auto px-4 lg:px-8 relative z-10 text-center max-w-4xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/15 border border-accent/40 rounded-sm mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span className="text-[11px] font-heading uppercase tracking-[0.25em] text-accent font-bold">
-              Made in Nepal
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/15 border border-accent/40 rounded-sm mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="text-[11px] font-heading uppercase tracking-[0.2em] text-accent font-semibold">
+              Curated Expeditions
             </span>
           </div>
 
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-black uppercase text-white tracking-wide leading-tight mb-6">
-            Six Rides. <span className="text-accent">One Nepal.</span>
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-black uppercase text-white tracking-wide leading-tight mb-4">
+            Nepal Expeditions
           </h1>
 
-          <p className="text-sm sm:text-base text-zinc-300 font-sans leading-relaxed max-w-2xl mx-auto mb-10">
-            From a Lumbini sunrise to the walled city of Lo Manthang, six rides designed around Nepal’s roads and passes, all starting at our Bhairahawa showroom.
+          <p className="text-sm sm:text-base text-zinc-300 max-w-xl mx-auto">
+            Curated routes across Nepal, starting from our Bhairahawa showroom.
           </p>
-
-          {/* Expedition Assurance Highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto text-left">
-            <div className="flex items-start gap-3 p-3.5 bg-[#171717] border border-border/80 rounded-sm">
-              <Shield className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-              <div>
-                <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-white">
-                  Road Captains
-                </h2>
-                <p className="text-[11px] text-zinc-400 leading-snug mt-0.5">
-                  Every ride is led by an experienced road captain who knows these roads.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3.5 bg-[#171717] border border-border/80 rounded-sm">
-              <Wrench className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-              <div>
-                <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-white">
-                  Technical Chase Crew
-                </h2>
-                <p className="text-[11px] text-zinc-400 leading-snug mt-0.5">
-                  Support vehicle carrying certified mechanics, genuine spares, luggage, and medical kits.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3.5 bg-[#171717] border border-border/80 rounded-sm">
-              <Compass className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-              <div>
-                <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-white">
-                  Bhairahawa Gateway
-                </h2>
-                <p className="text-[11px] text-zinc-400 leading-snug mt-0.5">
-                  Pre-departure bike checks, gear fittings, and local Nepal & cross-border permit briefings.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
