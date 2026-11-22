@@ -29,23 +29,26 @@ export function MotorcycleLineup() {
   useImagePrefetch(lineupUrls, { priority: 25 });
 
   return (
-    <section className="relative py-20 lg:py-28 bg-[#0D0D0D] [content-visibility:auto] [contain-intrinsic-size:1px_800px]">
+    <section className="relative py-20 lg:py-28 bg-[#090909] [content-visibility:auto] [contain-intrinsic-size:1px_800px] border-t border-white/[0.06]">
       <div className="container mx-auto px-4 lg:px-8 relative">
         <SectionHeading
-          label="Fleet"
+          label="Official Fleet"
           title="Motorcycle Lineup"
         />
 
         {/* 350cc Series */}
         <div className="mb-16">
-          <div className="flex items-center gap-3 mb-6 pb-3 border-b border-border">
+          <div className="flex items-center gap-3 mb-8 pb-3 border-b border-white/10">
             <div className="w-1.5 h-3.5 bg-accent" />
-            <h3 className="font-heading text-base tracking-wider text-white uppercase font-bold">
+            <h3 className="font-heading text-base tracking-[0.15em] text-white uppercase font-bold">
               350cc Series
             </h3>
+            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-widest ml-auto">
+              J-Platform
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {series350.map((moto) => (
               <MotorcycleCard key={moto.id} motorcycle={moto} />
             ))}
@@ -77,20 +80,23 @@ function MotorcycleCard({
     <Card
       onMouseEnter={handleCardHover}
       onFocusCapture={handleCardHover}
-      className="group relative bg-card border border-border hover:border-accent/60 transition-all duration-300 rounded-sm overflow-hidden flex flex-col justify-between"
+      className="group relative bg-[#121212] border border-white/[0.08] hover:border-accent/50 transition-all duration-300 rounded-sm overflow-hidden flex flex-col justify-between hover:shadow-2xl hover:shadow-black/70 hover:-translate-y-1"
     >
       <div>
         {/* Motorcycle visual block */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-[radial-gradient(ellipse_at_50%_68%,#242424_0%,#0c0c0c_75%)] border-b border-border/60">
+        <div className="relative aspect-[4/3] overflow-hidden bg-[radial-gradient(ellipse_at_50%_72%,#222_0%,#0c0c0c_75%)] border-b border-white/[0.06]">
           {studioColor && (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 opacity-20 blur-2xl"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 opacity-25 blur-2xl transition-opacity duration-300 group-hover:opacity-40"
               style={{
                 background: `radial-gradient(ellipse at 50% 82%, ${studioColor.hex}, transparent 65%)`,
               }}
             />
           )}
+
+          {/* Pedestal floor line */}
+          <div className="absolute inset-x-4 bottom-3 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
 
           <OptimizedImage
             src={studioImage}
@@ -102,25 +108,25 @@ function MotorcycleCard({
               quality: 80,
               format: 'auto',
             }}
-            className="object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
             fallbackText="RE"
           />
 
           {motorcycle.isNew && (
-            <Badge className="absolute top-3 left-3 bg-accent text-white text-[10px] font-heading tracking-widest font-bold border-none rounded-sm z-10">
-              NEW MODEL
+            <Badge className="absolute top-3 left-3 bg-accent text-white text-[9px] font-heading tracking-widest font-bold border-none rounded-xs z-10 shadow-sm">
+              NEW
             </Badge>
           )}
 
-          <div className="absolute bottom-3 left-3 px-2 py-0.5 bg-black/80 border border-white/10 rounded-sm z-10">
-            <span className="text-[10px] font-heading tracking-wider text-zinc-300 uppercase">
+          <div className="absolute bottom-3 left-3 px-2 py-0.5 bg-black/80 backdrop-blur-xs border border-white/10 rounded-xs z-10">
+            <span className="text-[10px] font-mono tracking-wider text-zinc-300 uppercase">
               {motorcycle.category}
             </span>
           </div>
         </div>
 
         <CardContent className="p-5">
-          <p className="font-heading text-[11px] tracking-[0.2em] text-accent uppercase font-semibold mb-1">
+          <p className="font-heading text-[10px] tracking-[0.25em] text-accent uppercase font-bold mb-1.5">
             {motorcycle.subcategory}
           </p>
           <h3 className="font-heading text-xl font-bold uppercase text-white group-hover:text-accent transition-colors tracking-wide">
@@ -129,7 +135,7 @@ function MotorcycleCard({
         </CardContent>
       </div>
 
-      <div className="px-5 pb-5 pt-0 border-t border-border/40 mt-auto flex items-center justify-between pt-3">
+      <div className="px-5 pb-5 pt-0 border-t border-white/[0.06] mt-auto flex items-center justify-between pt-3.5">
         <Link
           href={motorcycle.href}
           className="inline-flex items-center gap-1 text-xs font-heading font-bold uppercase tracking-wider text-white hover:text-accent transition-colors group/link"
@@ -139,9 +145,9 @@ function MotorcycleCard({
         </Link>
         <Link
           href={`/book?motorcycle=${motorcycle.id}`}
-          className="text-[11px] font-heading uppercase tracking-wider text-zinc-400 hover:text-white"
+          className="text-[11px] font-heading uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
         >
-          Test Ride →
+          Book Ride →
         </Link>
       </div>
     </Card>

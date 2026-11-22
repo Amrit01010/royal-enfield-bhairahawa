@@ -180,11 +180,11 @@ export default async function RideDetailPage({ params }: PageProps) {
           {/* Left 2 Columns: Full Briefing */}
           <div className="lg:col-span-2 space-y-8">
             {/* Telemetry HUD Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#121212] p-4 border border-border/80 rounded-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#111111]/80 backdrop-blur-md p-4 border border-white/10 rounded-sm shadow-lg">
               <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 text-accent shrink-0" />
                 <div>
-                  <span className="text-[10px] font-heading uppercase tracking-widest text-zinc-500 block">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500 block">
                     Duration
                   </span>
                   <span className="text-sm font-heading uppercase font-bold text-white tracking-wider">
@@ -197,7 +197,7 @@ export default async function RideDetailPage({ params }: PageProps) {
                 <div className="flex items-center gap-3">
                   <Compass className="w-5 h-5 text-accent shrink-0" />
                   <div>
-                    <span className="text-[10px] font-heading uppercase tracking-widest text-zinc-500 block">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500 block">
                       Total Distance
                     </span>
                     <span className="text-sm font-heading uppercase font-bold text-white tracking-wider">
@@ -211,7 +211,7 @@ export default async function RideDetailPage({ params }: PageProps) {
                 <div className="flex items-center gap-3">
                   <Mountain className="w-5 h-5 text-accent shrink-0" />
                   <div>
-                    <span className="text-[10px] font-heading uppercase tracking-widest text-zinc-500 block">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500 block">
                       Max Elevation
                     </span>
                     <span className="text-sm font-heading uppercase font-bold text-white tracking-wider">
@@ -224,8 +224,8 @@ export default async function RideDetailPage({ params }: PageProps) {
               <div className="flex items-center gap-3">
                 <Calendar className="w-5 h-5 text-accent shrink-0" />
                 <div>
-                  <span className="text-[10px] font-heading uppercase tracking-widest text-zinc-500 block">
-                    Schedule Batch
+                  <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500 block">
+                    Season
                   </span>
                   <span className="text-sm font-heading uppercase font-bold text-white tracking-wider">
                     {ride.season || 'Year-round'}
@@ -236,19 +236,28 @@ export default async function RideDetailPage({ params }: PageProps) {
 
             {/* Circuit Route Breakdown */}
             {ride.route && (
-              <div className="p-5 bg-[#121212] border border-border/80 rounded-sm">
+              <div className="p-5 sm:p-6 bg-[#121212] border border-white/[0.08] rounded-sm">
                 <div className="flex items-center gap-2 text-xs font-heading uppercase tracking-widest text-accent font-bold mb-3">
                   <MapPin className="w-4 h-4 text-accent" />
-                  Route
+                  Expedition Waypoints
                 </div>
-                <p className="text-sm sm:text-base text-zinc-200 leading-relaxed font-mono bg-black/50 p-4 border border-border/60 rounded-sm">
-                  {ride.route}
-                </p>
+                <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-heading font-medium text-zinc-200">
+                  {ride.route.split(/\s*[-–]\s*/).map((stop, idx, arr) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="px-3 py-1.5 bg-[#181818] border border-white/[0.08] rounded-sm text-white">
+                        {stop}
+                      </span>
+                      {idx < arr.length - 1 && (
+                        <span className="text-accent font-bold">→</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
             {/* Expedition Narrative */}
-            <div className="p-6 bg-[#121212] border border-border/80 rounded-sm">
+            <div className="p-6 bg-[#121212] border border-white/[0.08] rounded-sm">
               <h2 className="font-heading text-lg font-bold uppercase text-white tracking-wider mb-4 flex items-center gap-2">
                 <span className="w-1.5 h-4 bg-accent" />
                 Briefing
@@ -261,7 +270,7 @@ export default async function RideDetailPage({ params }: PageProps) {
             {/* Terrain Profile & Recommended Motorcycles */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {ride.terrain && (
-                <div className="p-5 bg-[#121212] border border-border/80 rounded-sm">
+                <div className="p-5 bg-[#121212] border border-white/[0.08] rounded-sm">
                   <h3 className="font-heading text-xs uppercase tracking-wider text-white font-bold mb-2 flex items-center gap-2">
                     <Shield className="w-4 h-4 text-accent" />
                     Terrain & Road Conditions
@@ -271,7 +280,7 @@ export default async function RideDetailPage({ params }: PageProps) {
               )}
 
               {ride.motorcycleSuitability && (
-                <div className="p-5 bg-[#121212] border border-border/80 rounded-sm">
+                <div className="p-5 bg-[#121212] border border-white/[0.08] rounded-sm">
                   <h3 className="font-heading text-xs uppercase tracking-wider text-white font-bold mb-2 flex items-center gap-2">
                     <Wrench className="w-4 h-4 text-accent" />
                     Recommended Machines
@@ -419,10 +428,10 @@ export default async function RideDetailPage({ params }: PageProps) {
                   <span className="text-zinc-200">{siteConfig.location.phone}</span>
                 </div>
                 <div>
-                  <span className="font-heading uppercase text-[10px] tracking-wider text-zinc-500 block">
+                  <span className="font-heading uppercase text-[10px] tracking-wider text-zinc-400 block">
                     Opening Hours
                   </span>
-                  <span className="text-zinc-200">Sun – Fri: 9:00 AM – 7:00 PM</span>
+                  <span className="text-zinc-200">Sun – Fri: 10:00 AM – 6:30 PM (Sat Closed)</span>
                 </div>
               </div>
 

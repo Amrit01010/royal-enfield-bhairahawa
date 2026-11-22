@@ -9,7 +9,7 @@ export default function Home() {
     <>
       <HeroSection />
       <MotorcycleLineup />
-      <RidesSection />
+      <RidesSection condensed />
       <CTASection />
     </>
   );

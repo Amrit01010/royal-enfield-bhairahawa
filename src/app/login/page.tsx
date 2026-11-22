@@ -123,7 +123,7 @@ function LoginForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5 bg-card border border-border rounded-sm p-6 sm:p-8">
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5 bg-[#121212] border border-white/[0.08] shadow-2xl rounded-sm p-6 sm:p-8">
             <div>
               <label
                 htmlFor="email"
@@ -139,7 +139,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
-                className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
+                className="w-full px-4 py-2.5 bg-[#181818] border border-white/10 rounded-sm text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
                 placeholder="rider@royalenfield.com"
               />
             </div>
@@ -160,13 +160,13 @@ function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
-                  className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors pr-12"
+                  className="w-full px-4 py-2.5 bg-[#181818] border border-white/10 rounded-sm text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors pr-12"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -191,7 +191,7 @@ function LoginForm() {
               type="submit"
               size="lg"
               disabled={loading}
-              className="w-full bg-accent hover:bg-accent/90 text-white font-heading uppercase tracking-wider font-bold h-11 text-xs"
+              className="w-full bg-accent hover:bg-accent/90 text-white font-heading uppercase tracking-wider font-bold h-11 text-xs cursor-pointer shadow-md shadow-accent/20"
             >
               {loading ? (
                 <>
@@ -205,10 +205,10 @@ function LoginForm() {
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border" />
+                <div className="w-full border-t border-white/10" />
               </div>
               <div className="relative flex justify-center text-[10px] font-heading uppercase tracking-widest">
-                <span className="bg-card px-3 text-zinc-500">
+                <span className="bg-[#121212] px-3 text-zinc-400 font-medium">
                   Or continue with
                 </span>
               </div>
@@ -220,7 +220,7 @@ function LoginForm() {
               size="lg"
               onClick={handleGoogleSignIn}
               disabled={googleLoading}
-              className="w-full border-border bg-secondary hover:border-accent text-white font-heading uppercase tracking-wider text-xs h-11"
+              className="w-full border-white/10 bg-[#181818] hover:bg-[#202020] hover:border-white/20 text-white font-heading uppercase tracking-wider text-xs h-11 cursor-pointer"
             >
               {googleLoading ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

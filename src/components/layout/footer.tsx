@@ -1,94 +1,114 @@
 // src/components/layout/footer.tsx
 import Link from 'next/link';
-import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { siteConfig } from '@/config/site';
-import { navItems } from '@/lib/constants/motorcycles';
+import { motorcycles } from '@/lib/constants/motorcycles';
+import { rides } from '@/lib/constants/rides';
 import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
+import { InstagramIcon, FacebookIcon, YouTubeIcon } from '@/components/icons/social-icons';
 import { getWhatsAppNumber } from '@/lib/whatsapp';
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-border bg-[#0B0B0B]">
-      <div className="container mx-auto px-4 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand */}
+    <footer className="relative border-t border-white/[0.08] bg-[#070707]">
+      <div className="container mx-auto px-4 lg:px-8 py-16 lg:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+          {/* Brand & Dealership Identity */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-1.5 h-7 bg-accent" />
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-1 h-7 bg-accent rounded-[1px]" />
               <div className="flex flex-col leading-none">
                 <span className="font-heading text-xl font-bold tracking-wider text-white">
                   ROYAL ENFIELD
                 </span>
-                <span className="font-heading text-[10px] tracking-[0.3em] text-accent uppercase">
+                <span className="font-mono text-[9px] tracking-[0.3em] text-accent uppercase font-medium">
                   Bhairahawa
                 </span>
               </div>
             </div>
-            <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
-              {siteConfig.description}
+            <p className="text-xs text-zinc-400 mb-6 leading-relaxed font-sans">
+              Authorized Royal Enfield dealership and certified service center for Bhairahawa, Butwal, and Lumbini Province.
             </p>
-              <div className="flex gap-2.5">
-                {['Instagram', 'Facebook', 'YouTube'].map((social) => (
-                  <Link
-                    key={social}
-                    href="#"
-                    className="w-8 h-8 rounded-sm border border-border bg-secondary flex items-center justify-center text-zinc-400 hover:text-white hover:border-accent hover:bg-accent/10 transition-colors text-xs font-heading font-semibold"
-                  >
-                    {social[0]}
-                  </Link>
-                ))}
-                <a
-                  href={`https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent('Namaste Royal Enfield Bhairahawa!')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-sm border border-border bg-secondary flex items-center justify-center text-zinc-400 hover:text-[#25D366] hover:border-[#25D366] hover:bg-[#25D366]/10 transition-colors text-xs font-heading font-semibold"
-                  aria-label="Direct message on WhatsApp"
-                  title="WhatsApp"
-                >
-                  <WhatsAppIcon className="w-3.5 h-3.5" />
-                </a>
-              </div>
+            <div className="flex gap-2">
+              <a
+                href={siteConfig.links.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-sm border border-white/10 bg-white/[0.03] flex items-center justify-center text-zinc-400 hover:text-white hover:border-accent hover:bg-accent/10 transition-colors"
+                aria-label="Follow Royal Enfield Bhairahawa on Instagram"
+              >
+                <InstagramIcon className="w-4 h-4" />
+              </a>
+              <a
+                href={siteConfig.links.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-sm border border-white/10 bg-white/[0.03] flex items-center justify-center text-zinc-400 hover:text-white hover:border-accent hover:bg-accent/10 transition-colors"
+                aria-label="Follow Royal Enfield Bhairahawa on Facebook"
+              >
+                <FacebookIcon className="w-4 h-4" />
+              </a>
+              <a
+                href={siteConfig.links.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-sm border border-white/10 bg-white/[0.03] flex items-center justify-center text-zinc-400 hover:text-white hover:border-accent hover:bg-accent/10 transition-colors"
+                aria-label="Subscribe to Royal Enfield on YouTube"
+              >
+                <YouTubeIcon className="w-4 h-4" />
+              </a>
+              <a
+                href={`https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent('Namaste Royal Enfield Bhairahawa!')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-sm border border-white/10 bg-white/[0.03] flex items-center justify-center text-zinc-400 hover:text-[#25D366] hover:border-[#25D366] hover:bg-[#25D366]/10 transition-colors"
+                aria-label="Chat directly with showroom on WhatsApp"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Real Motorcycles Links */}
           <div>
-            <h4 className="font-heading text-sm font-bold text-white mb-4 tracking-widest uppercase flex items-center gap-2">
-              <span className="w-1 h-3 bg-accent" />
+            <h4 className="font-heading text-xs font-bold text-white mb-4 tracking-[0.2em] uppercase flex items-center gap-2">
+              <span className="w-1 h-3 bg-accent rounded-[0.5px]" />
               Motorcycles
             </h4>
             <ul className="space-y-2.5">
-              {navItems.map((item) => (
-                <li key={item.label}>
+              {motorcycles.map((moto) => (
+                <li key={moto.id}>
                   <Link
-                    href={item.href}
-                    className="text-xs font-heading uppercase tracking-wider text-zinc-400 hover:text-white hover:text-accent transition-colors"
+                    href={moto.href}
+                    className="text-xs font-sans text-zinc-400 hover:text-white transition-colors block"
                   >
-                    {item.label}
+                    {moto.name}
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/accessories"
+                  className="text-xs font-sans text-zinc-400 hover:text-accent transition-colors block pt-1 border-t border-white/[0.06]"
+                >
+                  Genuine Accessories (GMA)
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Rides */}
+          {/* Real Nepal Expeditions Links */}
           <div>
-            <h4 className="font-heading text-sm font-bold text-white mb-4 tracking-widest uppercase flex items-center gap-2">
-              <span className="w-1 h-3 bg-accent" />
-              Expeditions & Rides
+            <h4 className="font-heading text-xs font-bold text-white mb-4 tracking-[0.2em] uppercase flex items-center gap-2">
+              <span className="w-1 h-3 bg-accent rounded-[0.5px]" />
+              Nepal Expeditions
             </h4>
             <ul className="space-y-2.5">
-              {[
-                { name: 'Himalayan Odyssey', href: '/rides/himalayan-odyssey' },
-                { name: 'Moto Himalaya', href: '/rides/moto-himalaya' },
-                { name: 'Tour of Bhutan', href: '/rides/tour-of-bhutan' },
-                { name: 'Mustang Adventure', href: '/rides/himalayan-adventure-mustang' },
-                { name: 'Tour of North East', href: '/rides/tour-of-north-east' },
-                { name: 'One Ride (Global)', href: '/rides/one-ride' },
-              ].map((ride) => (
-                <li key={ride.name}>
+              {rides.map((ride) => (
+                <li key={ride.id}>
                   <Link
                     href={ride.href}
-                    className="text-xs font-heading uppercase tracking-wider text-zinc-400 hover:text-white hover:text-accent transition-colors"
+                    className="text-xs font-sans text-zinc-400 hover:text-white transition-colors block truncate"
                   >
                     {ride.name}
                   </Link>
@@ -97,61 +117,51 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Showroom & Operating Hours */}
           <div>
-            <h4 className="font-heading text-sm font-bold text-white mb-4 tracking-widest uppercase flex items-center gap-2">
-              <span className="w-1 h-3 bg-accent" />
-              Showroom Location
+            <h4 className="font-heading text-xs font-bold text-white mb-4 tracking-[0.2em] uppercase flex items-center gap-2">
+              <span className="w-1 h-3 bg-accent rounded-[0.5px]" />
+              Showroom
             </h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                <span className="text-xs text-zinc-400 leading-relaxed">
+                <span className="text-xs text-zinc-300 leading-relaxed font-sans">
                   {siteConfig.location.address}
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-accent shrink-0" />
-                <span className="text-xs text-zinc-400">
-                  {siteConfig.location.phone}
+                <Clock className="w-4 h-4 text-zinc-400 shrink-0" />
+                <span className="text-xs text-zinc-300 font-sans">
+                  Sun – Fri: 10:00 AM – 6:30 PM (Sat Closed)
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
-                <WhatsAppIcon className="w-4 h-4 text-[#DA1B28] shrink-0" />
+                <Phone className="w-4 h-4 text-accent shrink-0" />
                 <a
-                  href={`https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent('Namaste Royal Enfield Bhairahawa! I would like to inquire about bikes, booking, and accessories.')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-zinc-400 hover:underline transition-colors"
+                  href={`tel:${siteConfig.location.phone}`}
+                  className="text-xs text-zinc-300 hover:text-white transition-colors font-sans"
                 >
-                  WhatsApp: {siteConfig.location.phone}
+                  {siteConfig.location.phone}
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-accent shrink-0" />
-                <span className="text-xs text-zinc-400">
+                <a
+                  href={`mailto:${siteConfig.location.email}`}
+                  className="text-xs text-zinc-300 hover:text-white transition-colors font-sans"
+                >
                   {siteConfig.location.email}
-                </span>
+                </a>
               </li>
             </ul>
-            <Link
-              href={siteConfig.location.mapsUrl}
-              className="inline-flex items-center gap-1.5 mt-4 text-xs font-heading font-semibold uppercase tracking-wider text-accent hover:underline"
-            >
-              Get Directions to Showroom
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-14 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[11px] font-heading tracking-wider uppercase text-zinc-500">
-            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-          </p>
-          <p className="text-[11px] font-heading tracking-widest uppercase text-zinc-400">
-            Pure Motorcycling · Built for every adventure.
-          </p>
+        {/* Bottom Sub-bar */}
+        <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-400 text-[11px] font-mono">
+          <p>© {new Date().getFullYear()} Royal Enfield Bhairahawa. Dealership Code: NEP-BHW-01.</p>
+          <p className="uppercase tracking-widest text-zinc-500">Made Like A Gun · Since 1901</p>
         </div>
       </div>
     </footer>

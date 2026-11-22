@@ -177,14 +177,6 @@ export function HeroSection() {
 
         {/* Mechanical Engineering Grid */}
         <div className="absolute inset-0 z-3 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none" />
-
-        {/* Ghost Typographic Architectural Watermark in the background */}
-        <div
-          key={`ghost-${slide.id}`}
-          className="absolute -bottom-8 right-2 sm:right-8 text-[12vw] sm:text-[14vw] font-heading font-black text-white/[0.03] select-none pointer-events-none tracking-tighter uppercase leading-none z-3 transition-opacity duration-700"
-        >
-          {slide.title.replace('NEW ', '')}
-        </div>
       </div>
 
       {/* Tactile Noise overlay */}
@@ -223,55 +215,39 @@ export function HeroSection() {
               {slide.subtitle}
             </p>
 
-            {/* Precision Mechanical Telemetry HUD (Key Rider Specs) */}
+            {/* Precision Inline Mechanical Spec Strip */}
             {slide.specs && (
               <div
                 key={`specs-${slide.id}`}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 mb-7 animate-slide-up delay-300"
+                className="flex flex-wrap items-center gap-x-5 gap-y-2 py-2.5 px-4 bg-white/[0.03] border border-white/[0.08] rounded-sm mb-7 animate-slide-up delay-200"
               >
-                <div className="bg-[#141414]/90 border border-border/80 rounded-sm p-2.5 hover:border-accent/40 transition-colors">
-                  <span className="block font-heading text-[9px] uppercase tracking-widest text-zinc-500 mb-0.5">
-                    Engine
-                  </span>
-                  <span className="block font-heading text-sm sm:text-base font-bold text-white tracking-wider">
-                    {slide.specs.displacement}
-                  </span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-zinc-500">Engine</span>
+                  <span className="font-heading text-sm font-bold text-white tracking-wide">{slide.specs.displacement}</span>
                 </div>
-
-                <div className="bg-[#141414]/90 border border-border/80 rounded-sm p-2.5 hover:border-accent/40 transition-colors">
-                  <span className="block font-heading text-[9px] uppercase tracking-widest text-zinc-500 mb-0.5">
-                    Power
-                  </span>
-                  <span className="block font-heading text-sm sm:text-base font-bold text-white tracking-wider">
-                    {slide.specs.power}
-                  </span>
+                <span className="text-zinc-700 hidden sm:inline">•</span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-zinc-500">Power</span>
+                  <span className="font-heading text-sm font-bold text-white tracking-wide">{slide.specs.power}</span>
                 </div>
-
-                <div className="bg-[#141414]/90 border border-border/80 rounded-sm p-2.5 hover:border-accent/40 transition-colors">
-                  <span className="block font-heading text-[9px] uppercase tracking-widest text-zinc-500 mb-0.5">
-                    Torque
-                  </span>
-                  <span className="block font-heading text-sm sm:text-base font-bold text-white tracking-wider">
-                    {slide.specs.torque}
-                  </span>
+                <span className="text-zinc-700 hidden sm:inline">•</span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-zinc-500">Torque</span>
+                  <span className="font-heading text-sm font-bold text-white tracking-wide">{slide.specs.torque}</span>
                 </div>
-
-                <div className="bg-[#141414]/90 border border-border/80 rounded-sm p-2.5 hover:border-accent/40 transition-colors">
-                  <span className="block font-heading text-[9px] uppercase tracking-widest text-zinc-500 mb-0.5">
-                    Gearbox
-                  </span>
-                  <span className="block font-heading text-sm sm:text-base font-bold text-white tracking-wider">
-                    {slide.specs.transmission}
-                  </span>
+                <span className="text-zinc-700 hidden sm:inline">•</span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-zinc-500">Gearbox</span>
+                  <span className="font-heading text-sm font-bold text-white tracking-wide">{slide.specs.transmission}</span>
                 </div>
               </div>
             )}
 
-            {/* Action Triggers (CTAs) */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 animate-slide-up delay-400">
+            {/* Action Triggers */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 animate-slide-up delay-300">
               <Button
                 size="lg"
-                className="bg-accent hover:bg-accent/90 text-white font-heading font-bold uppercase tracking-wider px-7 h-12 text-sm group shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all rounded-sm"
+                className="bg-accent hover:bg-accent/90 text-white font-heading font-bold uppercase tracking-wider px-8 h-12 text-sm group shadow-xl shadow-accent/25 hover:shadow-accent/40 transition-all rounded-sm hover:-translate-y-0.5 active:translate-y-0"
                 asChild
               >
                 <Link href={`/book?motorcycle=${slide.id}`}>
@@ -283,7 +259,7 @@ export function HeroSection() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-border bg-secondary hover:border-white/40 hover:bg-secondary/80 text-white font-heading uppercase tracking-wider text-sm h-12 px-6 rounded-sm transition-all"
+                className="border-white/15 bg-white/[0.04] hover:border-white/40 hover:bg-white/[0.08] text-white font-heading uppercase tracking-wider text-sm h-12 px-7 rounded-sm transition-all"
                 asChild
               >
                 <Link href={slide.href}>Explore Model</Link>
@@ -291,7 +267,7 @@ export function HeroSection() {
 
               <Link
                 href="/models"
-                className="inline-flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider text-zinc-400 hover:text-white transition-colors ml-1"
+                className="inline-flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider text-zinc-400 hover:text-white transition-colors ml-2 py-2"
               >
                 <span>All Models</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-accent" />
@@ -360,7 +336,7 @@ export function HeroSection() {
             </div>
 
             {/* The Elevated Motorcycle Presentation Viewport */}
-            <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden rounded-sm bg-[#121212]/80 border border-border/80 shadow-2xl backdrop-blur-sm group">
+            <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden rounded-sm bg-gradient-to-b from-[#161616]/90 to-[#0D0D0D] border border-white/10 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.9)] backdrop-blur-sm group">
               {/* Radial Spotlight directly behind the motorcycle */}
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(216,35,42,0.18)_0%,rgba(14,14,14,0)_70%)] pointer-events-none z-1" />
 
@@ -368,12 +344,15 @@ export function HeroSection() {
               {viewMode === 'studio' && studioColor && (
                 <div
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-2/3 opacity-25 blur-3xl pointer-events-none z-1 transition-opacity duration-700"
+                  className="absolute inset-x-0 bottom-0 h-2/3 opacity-30 blur-3xl pointer-events-none z-1 transition-opacity duration-700"
                   style={{
                     background: `radial-gradient(ellipse at 50% 78%, ${studioColor.hex}, transparent 60%)`,
                   }}
                 />
               )}
+
+              {/* Pedestal Reflection Line */}
+              <div className="absolute inset-x-8 bottom-4 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none z-1" />
 
               {/* Showroom Floor Shadow Gradient (action view only — studio shots include their own platform) */}
               <div

@@ -85,9 +85,9 @@ export default async function AccessoryDetailPage({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Image */}
           <div className="relative lg:sticky lg:top-28 self-start">
-            <span aria-hidden className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-accent z-10" />
-            <span aria-hidden className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-accent z-10" />
-            <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-border bg-[#141414]">
+            <span aria-hidden className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-accent/40 z-10" />
+            <span aria-hidden className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-accent/40 z-10" />
+            <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-white/10 bg-[#121212] shadow-2xl">
               <OptimizedImage
                 src={accessory.image}
                 alt={accessory.name}
@@ -105,7 +105,7 @@ export default async function AccessoryDetailPage({
             </div>
 
             {/* Genuine GMA Hallmark */}
-            <div className="mt-4 flex items-center justify-between p-3 bg-card border border-border rounded-sm">
+            <div className="mt-4 flex items-center justify-between p-3.5 bg-[#121212] border border-white/[0.08] rounded-sm">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
                 <span className="text-xs font-heading font-bold uppercase tracking-wider text-white">
@@ -113,7 +113,7 @@ export default async function AccessoryDetailPage({
                 </span>
               </div>
               {accessory.partNumber && (
-                <span className="text-[11px] font-mono text-zinc-400 bg-black/60 px-2 py-0.5 rounded border border-white/10">
+                <span className="text-[11px] font-mono text-zinc-300 bg-black/60 px-2 py-0.5 rounded-xs border border-white/10">
                   {accessory.partNumber}
                 </span>
               )}
@@ -148,21 +148,21 @@ export default async function AccessoryDetailPage({
             </p>
 
             {/* Motorcycle Fitment Section */}
-            <div className="bg-secondary/40 border border-border rounded-sm p-4 mb-6">
+            <div className="bg-[#121212] border border-white/[0.08] rounded-sm p-4 mb-6">
               <h4 className="text-[11px] font-heading font-bold uppercase tracking-widest text-zinc-300 mb-2.5 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-accent rounded-full" />
                 Motorcycle Compatibility:
               </h4>
               <div className="flex flex-wrap gap-2">
                 {isUniversal ? (
-                  <span className="bg-white/5 border border-white/10 text-white text-xs font-heading uppercase px-2.5 py-1 rounded-sm">
+                  <span className="bg-white/5 border border-white/10 text-white text-xs font-mono uppercase px-2.5 py-1 rounded-xs">
                     Universal Fit (All Royal Enfield Models)
                   </span>
                 ) : (
                   accessory.compatibleBikes.map((bikeId) => (
                     <span
                       key={bikeId}
-                      className="bg-black/60 border border-border text-zinc-200 text-xs font-heading uppercase tracking-wide px-2.5 py-1 rounded-sm"
+                      className="bg-black/60 border border-white/10 text-zinc-200 text-xs font-mono uppercase tracking-wide px-2.5 py-1 rounded-xs"
                     >
                       {formatBikeName(bikeId)}
                     </span>
@@ -175,8 +175,8 @@ export default async function AccessoryDetailPage({
             {(accessory.material || accessory.warranty) && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                 {accessory.material && (
-                  <div className="p-3 bg-card border border-border rounded-sm">
-                    <p className="text-[10px] font-heading uppercase tracking-widest text-zinc-500">
+                  <div className="p-3.5 bg-[#121212] border border-white/[0.08] rounded-sm">
+                    <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
                       Material / Construction
                     </p>
                     <p className="text-xs font-semibold text-white mt-1">
@@ -185,8 +185,8 @@ export default async function AccessoryDetailPage({
                   </div>
                 )}
                 {accessory.warranty && (
-                  <div className="p-3 bg-card border border-border rounded-sm">
-                    <p className="text-[10px] font-heading uppercase tracking-widest text-zinc-500">
+                  <div className="p-3.5 bg-[#121212] border border-white/[0.08] rounded-sm">
+                    <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
                       Showroom Guarantee
                     </p>
                     <p className="text-xs font-semibold text-white mt-1">
@@ -198,7 +198,7 @@ export default async function AccessoryDetailPage({
             )}
 
             {/* Add to Inquiry Cart & WhatsApp Direct Action */}
-            <div className="bg-card border border-border border-t-2 border-t-accent rounded-sm p-5 mb-8">
+            <div className="bg-[#121212] border border-white/10 border-t-2 border-t-accent rounded-sm p-6 mb-8 shadow-xl">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="w-4 h-4 text-accent shrink-0" />
                 <span className="font-heading font-bold uppercase tracking-wider text-white text-xs">
@@ -211,7 +211,7 @@ export default async function AccessoryDetailPage({
             </div>
 
             {/* Assurances */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 border border-border divide-y sm:divide-y-0 sm:divide-x divide-border rounded-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 border border-white/[0.08] divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08] rounded-sm bg-[#101010]/60">
               {assurances.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="p-4">
                   <Icon className="w-4 h-4 text-accent mb-2" />

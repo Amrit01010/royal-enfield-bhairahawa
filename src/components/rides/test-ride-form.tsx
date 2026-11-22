@@ -159,20 +159,20 @@ export function TestRideForm({
 
   return (
     <>
-      <div className={cn('relative bg-[#0F0F0F] border border-border rounded-sm overflow-hidden shadow-2xl', className)}>
+      <div className={cn('relative bg-[#0F0F0F] border border-white/[0.08] rounded-sm overflow-hidden shadow-2xl', className)}>
         {/* Showroom Identification Header Banner */}
-        <div className="bg-[#161616] border-b border-border/80 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="bg-gradient-to-r from-[#161616] via-[#141414] to-[#161616] border-b border-white/[0.08] px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-sm bg-accent/15 border border-accent/30 flex items-center justify-center shrink-0">
               <Bike className="w-5 h-5 text-accent" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-heading font-black tracking-[0.2em] text-accent uppercase">
+                <span className="text-[10px] font-heading font-bold tracking-[0.2em] text-accent uppercase">
                   Royal Enfield Nepal
                 </span>
                 <span className="text-zinc-600 text-xs">•</span>
-                <span className="text-[10px] font-heading font-semibold tracking-wider text-zinc-400 uppercase">
+                <span className="text-[10px] font-mono font-medium tracking-wider text-zinc-400 uppercase">
                   Bhairahawa
                 </span>
               </div>
@@ -183,7 +183,7 @@ export function TestRideForm({
           </div>
 
           <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <span className="inline-block w-2 h-2 bg-emerald-500 animate-pulse" />
+            <span className="inline-block w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
             <span className="font-heading uppercase tracking-wider text-[11px] text-zinc-300">
               Test Ride Slots Open
             </span>
@@ -191,7 +191,7 @@ export function TestRideForm({
         </div>
 
         {/* Showroom Location Strip */}
-        <div className="px-6 py-3 bg-[#131313] border-b border-border/50 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
+        <div className="px-6 py-3 bg-[#111111] border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
           <div className="flex items-center gap-2">
             <MapPin className="w-3.5 h-3.5 text-accent shrink-0" />
             <span>{siteConfig.location.address}</span>
@@ -206,17 +206,20 @@ export function TestRideForm({
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="p-6 sm:p-8 space-y-6"
+          className="p-6 sm:p-8 space-y-8"
           noValidate={false}
         >
-          {/* Model Selector Section */}
+          {/* Step 1: Model & Color Selector */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label htmlFor="motorcycleId" className="block text-xs font-heading uppercase tracking-wider text-white font-bold">
-                Select Model &amp; Colour *
-              </label>
+            <div className="flex items-center gap-2.5 mb-3 border-b border-white/[0.06] pb-2">
+              <span className="w-5 h-5 rounded-full bg-accent/20 border border-accent/40 text-accent font-heading font-bold text-xs flex items-center justify-center">
+                1
+              </span>
+              <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-white">
+                Select Model &amp; Colour
+              </h4>
               {activeMotorcycle && (
-                <span className="text-[11px] font-heading text-accent uppercase tracking-wider font-semibold">
+                <span className="ml-auto text-[11px] font-heading text-accent uppercase tracking-wider font-semibold">
                   {activeMotorcycle.category}{activeMotorcycle.specs?.engine ? ` · ${activeMotorcycle.specs.engine}` : ''}
                 </span>
               )}
@@ -262,7 +265,7 @@ export function TestRideForm({
                           }
                         }}
                         className={cn(
-                          'p-2.5 rounded-sm border text-left flex flex-col justify-between transition-all group relative',
+                          'p-2.5 rounded-sm border text-left flex flex-col justify-between transition-all group relative cursor-pointer',
                           isSelected
                             ? 'bg-accent/15 border-accent shadow-md ring-1 ring-accent/50'
                             : 'bg-secondary/40 border-border/70 hover:border-zinc-600 hover:bg-secondary/70'
@@ -294,14 +297,15 @@ export function TestRideForm({
                   })}
                 </div>
 
-                {/* Dropdown fallback for accessibility / select */}
+                {/* Hidden select fallback for accessibility / form submission */}
                 <select
                   id="motorcycleId"
                   name="motorcycleId"
                   required
                   value={selectedMotoId}
                   onChange={(e) => handleSelectMotorcycle(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white text-xs font-heading uppercase tracking-wider focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                  className="sr-only"
+                  aria-label="Select Royal Enfield model"
                 >
                   <option value="">Select a Royal Enfield Model *</option>
                   {motorcycles.map((moto) => (
@@ -325,102 +329,123 @@ export function TestRideForm({
             <input type="hidden" name="motorcycleColor" value={activeColor?.id ?? ''} />
           </div>
 
-          {/* Rider Name (First Name + Last Name) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="fName" className="block text-xs font-heading uppercase tracking-wider text-white font-semibold mb-1.5">
-                First name *
-              </label>
-              <Input
-                id="fName"
-                name="firstName"
-                type="text"
-                required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First name*"
-                className="bg-[#141414] border-border text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="lName" className="block text-xs font-heading uppercase tracking-wider text-white font-semibold mb-1.5">
-                Last name *
-              </label>
-              <Input
-                id="lName"
-                name="lastName"
-                type="text"
-                required
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Last name*"
-                className="bg-[#141414] border-border text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Contact Details (Email + Mobile Number) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="email" className="block text-xs font-heading uppercase tracking-wider text-white font-semibold mb-1.5">
-                Email *
-              </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address*"
-                className="bg-[#141414] border-border text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="mobile" className="block text-xs font-heading uppercase tracking-wider text-white font-semibold mb-1.5">
-                Mobile number *
-              </label>
-              <Input
-                id="mobile"
-                name="phone"
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+977 98XXXXXXXX"
-                className="bg-[#141414] border-border text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Date Picker (Date Only - NO Time field!) */}
+          {/* Step 2: Rider Details */}
           <div>
-            <label htmlFor="preferredDate" className="block text-xs font-heading uppercase tracking-wider text-white font-semibold mb-1.5">
-              Preferred Date * (Working Hours: 10:00 AM – 6:30 PM)
-            </label>
-            <div className="relative">
-              <Input
-                id="preferredDate"
-                name="preferredDate"
-                type="date"
-                required
-                min={todayIsoDate()}
-                value={preferredDate}
-                onChange={(e) => setPreferredDate(e.target.value)}
-                className="bg-[#141414] border-border text-sm pl-10"
-              />
-              <Calendar className="w-4 h-4 text-accent absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <div className="flex items-center gap-2.5 mb-3 border-b border-white/[0.06] pb-2">
+              <span className="w-5 h-5 rounded-full bg-accent/20 border border-accent/40 text-accent font-heading font-bold text-xs flex items-center justify-center">
+                2
+              </span>
+              <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-white">
+                Rider Details
+              </h4>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="fName" className="block text-xs font-heading uppercase tracking-wider text-zinc-300 font-semibold mb-1.5">
+                    First Name *
+                  </label>
+                  <Input
+                    id="fName"
+                    name="firstName"
+                    type="text"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="First name*"
+                    className="bg-[#141414] border-white/10 text-sm focus:border-accent text-white"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lName" className="block text-xs font-heading uppercase tracking-wider text-zinc-300 font-semibold mb-1.5">
+                    Last Name *
+                  </label>
+                  <Input
+                    id="lName"
+                    name="lastName"
+                    type="text"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Last name*"
+                    className="bg-[#141414] border-white/10 text-sm focus:border-accent text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="email" className="block text-xs font-heading uppercase tracking-wider text-zinc-300 font-semibold mb-1.5">
+                    Email Address *
+                  </label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email address*"
+                    className="bg-[#141414] border-white/10 text-sm focus:border-accent text-white"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="mobile" className="block text-xs font-heading uppercase tracking-wider text-zinc-300 font-semibold mb-1.5">
+                    Mobile Number *
+                  </label>
+                  <Input
+                    id="mobile"
+                    name="phone"
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+977 98XXXXXXXX"
+                    className="bg-[#141414] border-white/10 text-sm focus:border-accent text-white"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Disclaimer & Minimal Terms and Conditions (Matching Official Royal Enfield Nepal) */}
+          {/* Step 3: Date & Schedule */}
+          <div>
+            <div className="flex items-center gap-2.5 mb-3 border-b border-white/[0.06] pb-2">
+              <span className="w-5 h-5 rounded-full bg-accent/20 border border-accent/40 text-accent font-heading font-bold text-xs flex items-center justify-center">
+                3
+              </span>
+              <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-white">
+                Preferred Date
+              </h4>
+            </div>
+
+            <div>
+              <label htmlFor="preferredDate" className="block text-xs font-heading uppercase tracking-wider text-zinc-300 font-semibold mb-1.5">
+                Preferred Date * (Working Hours: 10:00 AM – 6:30 PM)
+              </label>
+              <div className="relative">
+                <Input
+                  id="preferredDate"
+                  name="preferredDate"
+                  type="date"
+                  required
+                  min={todayIsoDate()}
+                  value={preferredDate}
+                  onChange={(e) => setPreferredDate(e.target.value)}
+                  className="bg-[#141414] border-white/10 text-sm pl-10 focus:border-accent text-white"
+                />
+                <Calendar className="w-4 h-4 text-accent absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
+          </div>
+
+          {/* Disclaimer & Terms */}
           <div className="space-y-3 pt-2 border-t border-border/60">
-            {/* Disclaimer Text */}
             <p className="text-[11px] sm:text-xs text-zinc-400 leading-relaxed text-left">
-              <span className="font-bold text-zinc-300">Disclaimer:</span> By signing this form/checking this box, you acknowledge and agree that we may use the information you share with us, to communicate with you through WhatsApp, text messages, calls, and emails, in order to provide test ride scheduling, confirmation, and motorcycle related assistance for Royal Enfield Bhairahawa. All information provided will be secured and processed as per our privacy standards.
+              <span className="font-bold text-zinc-300">Disclaimer:</span> By submitting this form, you authorize Royal Enfield Bhairahawa to contact you via WhatsApp, SMS, or phone for appointment confirmation and ride scheduling.
             </p>
 
-            {/* Terms and Conditions Checkbox */}
             <div className={cn(
               'p-3.5 rounded-sm border transition-colors',
               termsError
@@ -441,7 +466,7 @@ export function TestRideForm({
                   className="mt-0.5 h-4 w-4 rounded-xs border-zinc-600 text-accent focus:ring-accent bg-zinc-900 cursor-pointer accent-[#D9232D]"
                 />
                 <span className="text-xs text-zinc-300 leading-normal">
-                  Please accept the{' '}
+                  I accept the{' '}
                   <button
                     type="button"
                     onClick={(e) => {
@@ -450,9 +475,9 @@ export function TestRideForm({
                     }}
                     className="text-white font-semibold underline underline-offset-2 hover:text-accent transition-colors"
                   >
-                    terms and conditions
+                    terms &amp; conditions
                   </button>{' '}
-                  as well as ride safety regulations (valid driving license & helmet mandatory).
+                  and agree that a valid motorcycle driving license and helmet are required for the test ride.
                 </span>
               </label>
 
@@ -471,7 +496,12 @@ export function TestRideForm({
               type="submit"
               size="lg"
               disabled={isPending}
-              className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-black font-heading text-sm uppercase font-black tracking-wider h-13 rounded-sm transition-all shadow-lg hover:shadow-xl shadow-[#25D366]/15 flex items-center justify-center gap-2.5 cursor-pointer"
+              className={cn(
+                'w-full font-heading text-sm uppercase font-black tracking-wider h-12 rounded-sm transition-all flex items-center justify-center gap-2.5 cursor-pointer',
+                termsAccepted && firstName && lastName && email && phone && preferredDate
+                  ? 'bg-[#25D366] hover:bg-[#20ba5a] text-black shadow-lg shadow-[#25D366]/20'
+                  : 'bg-[#25D366]/80 hover:bg-[#25D366] text-black'
+              )}
             >
               <WhatsAppIcon className="w-5 h-5 text-black" />
               <span>Book Test Ride via WhatsApp</span>

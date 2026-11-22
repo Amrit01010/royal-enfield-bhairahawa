@@ -86,7 +86,7 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5 bg-card border border-border rounded-sm p-6 sm:p-8">
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5 bg-[#121212] border border-white/[0.08] shadow-2xl rounded-sm p-6 sm:p-8">
             <div>
               <label
                 htmlFor="fullName"
@@ -102,7 +102,7 @@ export default function RegisterPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 autoComplete="name"
-                className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
+                className="w-full px-4 py-2.5 bg-[#181818] border border-white/10 rounded-sm text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
                 placeholder="John Doe"
               />
             </div>
@@ -122,7 +122,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
-                className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
+                className="w-full px-4 py-2.5 bg-[#181818] border border-white/10 rounded-sm text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
                 placeholder="rider@royalenfield.com"
               />
             </div>
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 autoComplete="tel"
-                className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
+                className="w-full px-4 py-2.5 bg-[#181818] border border-white/10 rounded-sm text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors"
                 placeholder="+977 9800000000"
               />
             </div>
@@ -163,13 +163,13 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
-                  className="w-full px-4 py-2.5 bg-secondary/80 border border-border rounded-sm text-white placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors pr-12"
+                  className="w-full px-4 py-2.5 bg-[#181818] border border-white/10 rounded-sm text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-colors pr-12"
                   placeholder="At least 6 characters"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -179,7 +179,7 @@ export default function RegisterPage() {
                   )}
                 </button>
               </div>
-              <p className="text-[11px] text-zinc-500 mt-1.5 font-sans">
+              <p className="text-[11px] text-zinc-400 mt-1.5 font-sans">
                 Must be at least 6 characters
               </p>
             </div>
@@ -188,7 +188,7 @@ export default function RegisterPage() {
               type="submit"
               size="lg"
               disabled={loading}
-              className="w-full bg-accent hover:bg-accent/90 text-white font-heading uppercase tracking-wider font-bold h-11 text-xs"
+              className="w-full bg-accent hover:bg-accent/90 text-white font-heading uppercase tracking-wider font-bold h-11 text-xs cursor-pointer shadow-md shadow-accent/20"
             >
               {loading ? (
                 <>

@@ -86,7 +86,7 @@ export function MotorcycleColorPicker({
       <div className="border-t border-border/70 bg-[#141414] px-4 py-4 sm:px-5">
         <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
           <div>
-            <p className="text-[10px] font-heading uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-[10px] font-heading uppercase tracking-[0.2em] text-zinc-400">
               Colour
             </p>
             <p
@@ -96,7 +96,7 @@ export function MotorcycleColorPicker({
               {activeLabel}
             </p>
           </div>
-          <p className="text-[10px] font-heading uppercase tracking-wider text-zinc-500">
+          <p className="text-[10px] font-heading uppercase tracking-wider text-zinc-400 font-medium">
             {colors.length} {colors.length === 1 ? 'colour' : 'colours'} available
           </p>
         </div>
@@ -121,21 +121,21 @@ export function MotorcycleColorPicker({
                   aria-label={color.name}
                   title={color.name}
                   className={cn(
-                    'group relative grid h-9 w-9 place-items-center rounded-full border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#141414]',
+                    'group relative grid h-10 w-10 place-items-center rounded-full border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#141414] cursor-pointer',
                     isSelected
-                      ? 'scale-110 border-white'
-                      : 'border-white/20 hover:scale-105 hover:border-white/70'
+                      ? 'scale-110 border-white ring-2 ring-accent/60'
+                      : 'border-white/25 hover:scale-105 hover:border-white/70'
                   )}
                 >
                   <span
                     aria-hidden
-                    className="absolute inset-[3px] rounded-full border border-black/50 shadow-inner"
+                    className="absolute inset-[3.5px] rounded-full border border-black/50 shadow-inner"
                     style={{ backgroundColor: color.hex }}
                   />
                   <Check
                     aria-hidden
                     className={cn(
-                      'relative z-10 h-3.5 w-3.5 stroke-[3] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] transition-opacity',
+                      'relative z-10 h-4 w-4 stroke-[3] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] transition-opacity',
                       isSelected ? 'opacity-100' : 'opacity-0'
                     )}
                   />

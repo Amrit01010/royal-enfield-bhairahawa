@@ -86,15 +86,40 @@ export const OptimizedImage = memo(function OptimizedImage({
     return (
       <div
         className={cn(
-          'relative overflow-hidden flex items-center justify-center bg-[#141414]',
-          fill ? 'absolute inset-0 w-full h-full' : 'w-full h-full min-h-[160px]',
+          'relative overflow-hidden flex flex-col items-center justify-center bg-[#131313] text-zinc-500 p-6 select-none',
+          fill ? 'absolute inset-0 w-full h-full' : 'w-full h-full min-h-[180px]',
           containerClassName
         )}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#282828_0%,#0e0e0e_100%)]" />
-        <div className="absolute inset-0 flex items-center justify-center opacity-15">
-          <span className="font-heading text-5xl font-black uppercase text-white tracking-widest select-none">
-            {fallbackText || 'ROYAL ENFIELD'}
+        {/* Subtle topographic contour pattern */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(circle at 50% 50%, #fff 1px, transparent 1px)`,
+            backgroundSize: '16px 16px',
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
+        
+        {/* Subtle emblem watermark */}
+        <div className="relative z-1 flex flex-col items-center text-center max-w-[80%]">
+          <div className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center mb-2.5 text-zinc-400">
+            <svg
+              className="w-4 h-4 text-accent/70"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <polygon points="3 20 9 8 13 14 17 9 21 20 3 20" />
+            </svg>
+          </div>
+          <span className="font-heading text-xs font-bold uppercase tracking-wider text-zinc-300 line-clamp-1">
+            {fallbackText || alt || 'Royal Enfield'}
+          </span>
+          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mt-0.5">
+            Himalayan Expedition
           </span>
         </div>
       </div>

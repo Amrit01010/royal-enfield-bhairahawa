@@ -85,7 +85,7 @@ export default async function BookTestRidePage({
               </p>
               <p className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-zinc-400 shrink-0" />
-                <span>Showroom Hours: Sunday – Friday: 10:00 AM – 6:30 PM</span>
+                <span>Showroom Hours: Sunday – Friday: 10:00 AM – 6:30 PM (Sat Closed)</span>
               </p>
             </div>
 

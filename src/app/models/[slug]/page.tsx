@@ -51,17 +51,20 @@ export default async function MotorcyclePage({
           All motorcycles
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 mb-20">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-border bg-[radial-gradient(ellipse_at_50%_68%,#242424_0%,#0c0c0c_75%)]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 mb-20 items-center">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-white/10 bg-[radial-gradient(ellipse_at_50%_72%,#222_0%,#0c0c0c_75%)] shadow-2xl">
             {studioColor && (
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 opacity-20 blur-2xl"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 opacity-25 blur-2xl"
                 style={{
                   background: `radial-gradient(ellipse at 50% 82%, ${studioColor.hex}, transparent 65%)`,
                 }}
               />
             )}
+
+            {/* Pedestal Reflection Line */}
+            <div className="absolute inset-x-8 bottom-4 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
 
             <OptimizedImage
               src={studioImage}
@@ -78,20 +81,20 @@ export default async function MotorcyclePage({
               fallbackText="ROYAL ENFIELD"
             />
             {motorcycle.isNew && (
-              <Badge className="absolute top-4 left-4 bg-accent text-white text-[10px] font-heading tracking-widest font-bold border-none rounded-sm z-10">
+              <Badge className="absolute top-4 left-4 bg-accent text-white text-[10px] font-heading tracking-widest font-bold border-none rounded-xs z-10 shadow-sm">
                 NEW MODEL
               </Badge>
             )}
           </div>
 
           <div>
-            <div className="inline-flex items-center gap-2 mb-3 px-2.5 py-1 bg-accent/10 border border-accent/20 rounded-sm">
-              <span className="w-1.5 h-1.5 bg-accent" />
-              <span className="font-heading text-[11px] tracking-[0.2em] text-accent uppercase font-semibold">
+            <div className="inline-flex items-center gap-2 mb-3">
+              <span className="w-1 h-3 bg-accent rounded-[0.5px]" />
+              <span className="font-heading text-xs tracking-[0.2em] text-accent uppercase font-bold">
                 {motorcycle.subcategory} · {motorcycle.category}
               </span>
             </div>
-            <h1 className="text-4xl sm:text-6xl font-heading font-bold uppercase text-white tracking-wide mb-2">
+            <h1 className="text-4xl sm:text-6xl font-heading font-black uppercase text-white tracking-tight mb-2 leading-none">
               {motorcycle.name}
             </h1>
             <p className="font-heading text-lg text-accent uppercase tracking-wider mb-6 font-semibold">
@@ -101,19 +104,19 @@ export default async function MotorcyclePage({
               {motorcycle.description}
             </p>
             {motorcycle.specs && (
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-2 gap-3 mb-8">
                 {Object.entries(motorcycle.specs).map(([key, value]) => (
-                  <div key={key} className="bg-card border border-border rounded-sm p-3.5">
-                    <p className="font-heading text-[10px] tracking-[0.2em] text-zinc-400 uppercase font-medium mb-1">
+                  <div key={key} className="bg-[#121212] border border-white/[0.08] rounded-sm p-4 hover:border-white/20 transition-colors">
+                    <p className="font-mono text-[9px] tracking-[0.2em] text-zinc-500 uppercase mb-1">
                       {key}
                     </p>
-                    <p className="text-white font-heading text-base font-bold uppercase">{value}</p>
+                    <p className="text-white font-heading text-base font-bold uppercase tracking-wider">{value}</p>
                   </div>
                 ))}
               </div>
             )}
 
-            <div className="pt-5 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-card/60 p-4 rounded-sm border border-border">
+            <div className="bg-[#121212] border border-white/[0.08] p-5 rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3">
                 <Wrench className="w-5 h-5 text-accent mt-0.5 shrink-0" />
                 <div>
@@ -121,19 +124,19 @@ export default async function MotorcyclePage({
                     Genuine {motorcycle.name} Accessories
                   </p>
                   <p className="text-xs text-zinc-400 mt-0.5">
-                    Explore factory crash guards, touring seats, luggage, and custom styling.
+                    Factory crash guards, touring seats, luggage, and custom styling.
                   </p>
                 </div>
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                className="border-border hover:border-accent text-white font-heading text-xs uppercase tracking-wider shrink-0"
+                className="border-white/15 bg-white/[0.03] hover:border-accent hover:bg-accent/10 text-white font-heading text-xs uppercase tracking-wider shrink-0"
                 asChild
               >
                 <Link href={`/accessories?bike=${motorcycle.id}`}>
                   View Accessories
-                  <ArrowUpRight className="w-3.5 h-3.5 ml-1.5" />
+                  <ArrowUpRight className="w-3.5 h-3.5 ml-1.5 text-accent" />
                 </Link>
               </Button>
             </div>

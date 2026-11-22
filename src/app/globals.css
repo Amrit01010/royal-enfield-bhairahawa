@@ -67,20 +67,44 @@
   --radius: 0.25rem;
 }
 
-@layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
+/* Global Typography Rules */
+body {
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: -0.011em;
+}
 
-  body {
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
-    -webkit-font-smoothing: antialiased;
-  }
+/* Clear display headings vs readable body */
+h1, h2, h3, h4 {
+  font-family: var(--font-oswald), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-oswald), var(--font-inter), sans-serif;
-    letter-spacing: 0.03em;
+p, span, li, label, input, select, textarea {
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-heading {
+  font-family: var(--font-oswald), sans-serif;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Accessibility Focus Visible Ring */
+*:focus-visible {
+  outline: 2px solid hsl(var(--accent));
+  outline-offset: 2px;
+}
+
+/* Respect Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -159,12 +183,45 @@ html {
 .delay-500 { animation-delay: 500ms; }
 .delay-600 { animation-delay: 600ms; }
 
-/* Royal Enfield Heritage Utilities */
+/* Royal Enfield Heritage & Precision Automotive Styling */
 .font-heading {
   font-family: var(--font-oswald), var(--font-inter), sans-serif;
 }
 
-/* Solid asphalt panel (replaces generic glassmorphism) */
+/* Precision Machined Card Surfaces */
+.card-machined {
+  background: linear-gradient(180deg, rgba(26, 26, 26, 0.7) 0%, rgba(18, 18, 18, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-machined:hover {
+  border-color: rgba(216, 35, 42, 0.4);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.7), 0 0 20px -4px rgba(216, 35, 42, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Subtle Crimson Atmospheric Glow */
+.glow-crimson-subtle {
+  box-shadow: 0 0 25px -5px rgba(216, 35, 42, 0.25);
+}
+
+.glow-crimson-hover:hover {
+  box-shadow: 0 0 35px -5px rgba(216, 35, 42, 0.35);
+}
+
+/* Precision Telemetry HUD Divider */
+.telemetry-divider {
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+}
+
+/* Subtle gallery pedestal floor shadow */
+.gallery-pedestal {
+  background: radial-gradient(ellipse 65% 50% at 50% 68%, rgba(255, 255, 255, 0.06) 0%, rgba(20, 20, 20, 0.4) 45%, transparent 75%);
+}
+
+/* Solid asphalt panel */
 .re-panel {
   background-color: hsl(var(--card));
   border: 1px solid hsl(var(--border));
